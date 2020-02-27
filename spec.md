@@ -15,6 +15,7 @@ admin.ystv.co.uk
 graphics.ystv.co.uk
 files.ystv.co.uk
 upload.ystv.co.uk
+dev.ystv.co.uk
 
 cal.ystv.co.uk
 evil.ystv.co.uk
