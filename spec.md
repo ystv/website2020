@@ -24,3 +24,5 @@ Streaming Bitrate options
 20Mb
 7Mb
 3.5Mb
+
+will use jenkins to live deploy from github to web
