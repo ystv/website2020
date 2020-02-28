@@ -12,6 +12,7 @@ stream.ystv.co.uk
 	- /rtmp
 ystv.co.uk
 admin.ystv.co.uk
+internal.ystv.co.uk
 graphics.ystv.co.uk
 files.ystv.co.uk
 upload.ystv.co.uk
