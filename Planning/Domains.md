@@ -1,4 +1,4 @@
-## Domains
+# Domains
 ### Public facing
 * ystv.co.uk
 * sso.ystv.co.uk
@@ -27,7 +27,7 @@ stream.ystv.co.uk
 	* /rtmp
 
 ## Deployment
-Will use jenkins to live deploy from github to web, master going to `ystv.co.uk` whilst dev branch to `dev.ystv.co.uk`
+Will use jenkins to live deploy from github to web, master going to `ystv.co.uk` whilst dev branch to `dev.ystv.co.uk`.
 
 ## Misc
 OB unit site just use the OB's own IP
