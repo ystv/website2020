@@ -4,8 +4,7 @@ pipeline {
     stage('Begin') {
       steps {
         echo 'Starting build'
-        sh '''git clone https://github.com/YSTV/Website2ElectricBoogaloo.git
-cd Website2ElectricBoogaloo'''
+        sh 'cd Website2ElectricBoogaloo'
       }
     }
 
