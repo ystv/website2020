@@ -4,7 +4,7 @@ pipeline {
     stage('Begin') {
       steps {
         echo 'Starting build'
-        sh 'cd Website2ElectricBoogaloo'
+        sh 'cd /var/jenkins_home/workspace/Website2ElectricBoogaloo_master'
       }
     }
 
