@@ -1,5 +1,5 @@
 # Website2ElectricBoogaloo
-A little thought experiment for a new website written with a react frontend and django backend
+A little thought experiment for a new website written with a react frontend and django backend all in docker
 
 To deploy the website (or to rebuild the website image) use jenkins to set build arg "build_id" (cleans up intermediate image):
 
