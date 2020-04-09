@@ -1,0 +1,11 @@
+version: '3.7'
+
+services:
+
+  public-site:
+    container_name: ystv_website_public
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '1337:80'

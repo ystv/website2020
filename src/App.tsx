@@ -16,7 +16,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Visit the old website
+          Visit the current website
         </a>
       </header>
     </div>

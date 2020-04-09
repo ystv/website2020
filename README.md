@@ -1,6 +1,27 @@
 # Website2ElectricBoogaloo
 A little thought experiment for a new website written with a react frontend and django backend
 
+To deploy the website (or to rebuild the website image) use jenkins to set build arg "build_id" (cleans up intermediate image):
+
+### `docker-compose up -d --build --force-recreate --remove-orphans --build-arg BUILD_ID`
+### `docker image prune --filter label=stage=builder --filter label=build=$BUILD_ID`
+
+To stop the website (and remove the images):
+
+### `docker-compose down --rmi 'all' --remove-orphans`
+
+To list all images on a machine:
+
+### `docker image ls`
+
+To remove all unused images (inc build images, WILL DELETE ALL UNUSED IMAGES ON THE SYSTEM):
+
+### `docker image prune`
+
+To update the external images (I think):
+
+### `docker-compose pull`
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
