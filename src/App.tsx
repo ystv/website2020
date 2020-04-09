@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from './logo.svg';
+import logo from './ystv logo purple.png';
 import './App.css';
 
 function App() {
@@ -12,11 +12,11 @@ function App() {
         </p>
         <a
           className="App-link"
-          href="https://reactjs.org"
+          href="https://ystv.co.uk"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React
+          Visit the old website
         </a>
       </header>
     </div>
