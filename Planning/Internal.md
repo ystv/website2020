@@ -7,6 +7,7 @@ This is where any member of YSTV will be able to YSTV related activites with eas
 * Member of the week, a randomly chosen member who had logged in the previous week before.
 * Quick links to our Slack, FB, Twitter, Insta.
 * User info
+* Amount of editing computers available / time until quiet
 ## Calendar
 So we can organise our events!
 * Signup sheets
@@ -99,3 +100,5 @@ Allows members to contact the commitee in a friendly way
 * Submit anonymously if needed
 * With correct permission can reply back here
 * Users are emailed with any interaction
+## Trello
+Essentially a self-hosted trello, keep things more under the ystv.co.uk domain
