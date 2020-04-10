@@ -1,25 +1,16 @@
 pipeline {
     agent {
-        docker {
-            image 'node:alpine'
-        }
+    dockerfile {
+        label 'website_public-page'
+//        additionalBuildArgs  '--build-arg version=1.0.2'
+        args '-v /tmp:/tmp'
     }
+}
     stages {
-        stage('Install dependencies') {
-            steps {
-                sh 'yarn install'  
-            }
-        }
         stage('Build') {
             steps {
-                
-                sh 'yarn build'
-                sh 'docker build'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying'
+                sh 'docker build --build-arg BUILD_ID=${env.BUILD_ID}'
+                sh 'docker image prune --filter label=stage=builder --filter label=build=${env.BUILD_ID}'
             }
         }
     }
