@@ -1,0 +1,16 @@
+nav {
+  display: flex;
+  background-color: #9a5be3;
+  width: 100%;
+}
+.nav-item {
+  padding: 1rem;
+  list-style: none;
+}
+.nav-item img {
+  height: 1rem;
+}
+.nav-item .nav-link {
+  text-decoration: none;
+  color: #fff;
+}
