@@ -1,9 +1,9 @@
 pipeline {
     agent {
     dockerfile {
-        label 'website_public-page'
+//        label 'website_public-page'
 //        additionalBuildArgs  '--build-arg version=1.0.2'
-        args '-v /tmp:/tmp'
+//        args '-v /tmp:/tmp'
     }
 }
     stages {
