@@ -12,7 +12,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Building"
-                sh "docker build . --build-arg BUILD_ID=${env.BUILD_ID} --rm --pull"
+                sh "docker build . --build-arg BUILD_ID=${env.BUILD_ID} --rm --pull -t ystv_public_website:latest"
             }
         }
         stage('Cleanup') {
