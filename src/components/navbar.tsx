@@ -5,11 +5,17 @@ import ystv from "../assets/images/icons/ystv.svg";
 const menuItems = ["Watch", "Freshers", "Hires", "Calendar", "About"];
 
 const LoginButton = () => {
-  return <NavItem text="Login" href="https://sso.ystv.co.uk" img=""></NavItem>;
+  return (
+    <NavItem text="Login" href="https://sso.ystv.co.uk" img="people"></NavItem>
+  );
 };
 function ProfileButton(name: string) {
   return (
-    <NavItem text={name} href="https://sso.ystv.co.uk/profile" img=""></NavItem>
+    <NavItem
+      text={name}
+      href="https://sso.ystv.co.uk/profile"
+      img="person"
+    ></NavItem>
   );
 }
 
@@ -17,10 +23,11 @@ function ProfileLoginButton() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   var returner;
   if (isLoggedIn === false) {
-    return <LoginButton />;
+    returner = LoginButton();
   } else {
-    return ProfileButton("Testy Testerson");
+    returner = ProfileButton("Testy Testerson");
   }
+  return returner;
 }
 
 type NavProps = {
@@ -28,12 +35,13 @@ type NavProps = {
   href: string;
   img: string;
 };
-
+/////////////////     CHANGE COLOUR AND MAKE BIGGER
 const NavItem = ({ text, href, img }: NavProps) => {
+  const icon = require("../assets/images/icons/navbar/" + img + ".svg");
   return (
     <li className="nav-item">
       <a className="nav-link" href={href}>
-        <img src={"../assets/images/icons/navbar" + img + ".svg"} alt={text} />
+        <img src={icon} alt={text} />
         <span>{text}</span>
       </a>
     </li>
@@ -50,7 +58,14 @@ const Navbar = () => {
       </li>
       Search Live api-special
       {menuItems.map(function (e, i) {
-        return <NavItem text={e} href={"/" + e.toLowerCase()} img="" key={i} />;
+        return (
+          <NavItem
+            text={e}
+            href={"/" + e.toLowerCase()}
+            img={e.toLowerCase()}
+            key={i}
+          />
+        );
       })}
       Internal
       <ProfileLoginButton />
