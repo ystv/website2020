@@ -20,6 +20,6 @@ LABEL item_name=website_public
 COPY --from=build /app/build /usr/share/nginx/html
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
-RUN yum -y update && yum install -y curl
+RUN apk add curl
 HEALTHCHECK CMD curl --fail http://localhost:80/ || exit 1
 CMD ["nginx", "-g", "daemon off;"]
