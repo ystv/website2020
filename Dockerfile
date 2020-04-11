@@ -14,6 +14,8 @@ RUN yarn build
 
 # production environment
 FROM nginx:stable-alpine
+RUN apt-get update && apt-get install -y \
+    curl
 LABEL stage=result
 LABEL build=$BUILD_ID
 LABEL item_name=website_public
