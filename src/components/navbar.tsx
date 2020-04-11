@@ -1,21 +1,14 @@
 import React, { useState, JSXElementConstructor } from "react";
 import "../stylesheets/navbar.css";
-import ystv from "../assets/images/icons/ystv.svg";
 
-const menuItems = ["Watch", "Freshers", "Hires", "Calendar", "About"];
+const menuItems = ["YSTV", "Watch", "Freshers", "Hires", "Calendar", "About"];
 
 const LoginButton = () => {
-  return (
-    <NavItem text="Login" href="https://sso.ystv.co.uk" img="people"></NavItem>
-  );
+  return <NavItem text="Login" href="https://sso.ystv.co.uk" img="people" />;
 };
 function ProfileButton(name: string) {
   return (
-    <NavItem
-      text={name}
-      href="https://sso.ystv.co.uk/profile"
-      img="person"
-    ></NavItem>
+    <NavItem text={name} href="https://sso.ystv.co.uk/profile" img="person" />
   );
 }
 
@@ -51,12 +44,6 @@ const NavItem = ({ text, href, img }: NavProps) => {
 const Navbar = () => {
   return (
     <nav>
-      <li className="nav-item">
-        <a className="nav-link" href="/">
-          <img src={ystv} alt="YSTV" />
-        </a>
-      </li>
-      Search Live api-special
       {menuItems.map(function (e, i) {
         return (
           <NavItem
@@ -67,7 +54,6 @@ const Navbar = () => {
           />
         );
       })}
-      Internal
       <ProfileLoginButton />
     </nav>
   );
