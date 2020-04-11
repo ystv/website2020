@@ -1,7 +1,8 @@
 import React, { useState, JSXElementConstructor } from "react";
 import "../stylesheets/navbar.css";
+import ystv from "../assets/images/icons/navbar/ystv.svg";
 
-const menuItems = ["YSTV", "Watch", "Freshers", "Hires", "Calendar", "About"];
+const menuItems = ["Watch", "Freshers", "Hires", "Calendar", "About"];
 
 const LoginButton = () => {
   return <NavItem text="Login" href="https://sso.ystv.co.uk" img="people" />;
@@ -44,6 +45,11 @@ const NavItem = ({ text, href, img }: NavProps) => {
 const Navbar = () => {
   return (
     <nav>
+      <li className="nav-item">
+        <a className="nav-link" href="/">
+          <img src={ystv} alt="ystv" />
+        </a>
+      </li>
       {menuItems.map(function (e, i) {
         return (
           <NavItem

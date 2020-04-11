@@ -6,25 +6,23 @@ nav {
 }
 .nav-item {
   height: 100%;
-  width: 8rem;
-  padding: 0.3rem 0 0.3rem;
+  min-width: 8rem;
+  padding: 0.3rem 0.3rem 0.3rem;
   transition: 0.3s;
 }
 .nav-item img {
   vertical-align: middle;
+  height: 2rem;
   filter: brightness(0) invert(1);
-  width: 2rem;
   padding-right: 0.3rem;
 }
 .nav-item .nav-link {
   text-decoration: none;
   color: #fff;
 }
-.nav-item:first-child span {
-  display: none;
-}
 .nav-item:last-child {
   margin-left: auto;
+  width: auto;
 }
 .nav-item:hover {
   background: #db5aba;
