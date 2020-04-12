@@ -23,8 +23,8 @@ pipeline {
         }
         stage('Upload') {
             steps {
-                sh "docker tag ystv-public-website localhost:5000/ystv-public-website" // Targeting
-                sh "docker push localhost:5000/ystv-public-website" // Uploaded to registry
+                sh "docker tag ystv-public-website localhost:5000/ystv-public-website:latest" // Targeting
+                sh "docker push localhost:5000/ystv-public-website:latest" // Uploaded to registry
             }
         }
         stage('Final Cleanup') {
