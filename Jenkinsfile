@@ -37,7 +37,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo "Deploying"
-                sh "docker run -d --rm -p 1337:80 --name ystv-dev-site localhost:5000/ystv-public-site"
+                sh "docker pull localhost:5000/ystv-public-webste" // Pulling image from local registry
+                sh "docker run -d --rm -p 1337:80 --name ystv-dev-site localhost:5000/ystv-public-site" // Deploying site
                 // Just doing it locally for the time-being, a cheeky web-hook might be an alternative?
                 //SSH TO WEB DOCKER-COMPOSE DOWN, UPDATE AND UP
             }
