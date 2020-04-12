@@ -1,0 +1,7 @@
+.bg {
+  width: 100%;
+  position: fixed;
+  top: 50px;
+  bottom: 0;
+  overflow: auto;
+}

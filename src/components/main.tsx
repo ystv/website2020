@@ -1,21 +1,18 @@
 import React from "react";
-import logo from "../ystv logo purple.png";
+import "../stylesheets/main.css";
+import SimpleBar from "simplebar-react";
+import "simplebar/dist/simplebar.min.css";
 
-const Main = () => {
+function Main() {
   return (
-    <main className="App-header">
-      <img src={logo} className="App-logo" alt="logo" />
-      <p>New YSTV, coming soon...</p>
-      <a
-        className="App-link"
-        href="https://ystv.co.uk"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Visit the current website
-      </a>
-    </main>
+    <SimpleBar style={{ maxHeight: "100%" }}>
+      <img
+        src="https://static.photocdn.pt/images/articles/2019/10/02/Simple_Landscape_Photography_Tips_With_Tons_of_Impact.jpg"
+        alt=""
+        height="500px"
+      />
+    </SimpleBar>
   );
-};
+}
 
 export default Main;
