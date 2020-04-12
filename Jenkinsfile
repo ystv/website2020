@@ -37,6 +37,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo "Deploying"
+                sh "docker kill ystv-dev-site"
                 sh "docker pull localhost:5000/ystv/public-website:${env.BUILD_ID}" // Pulling image from local registry
                 sh "docker run -d --rm -p 1337:80 --name ystv-dev-site localhost:5000/ystv/public-website:${env.BUILD_ID}" // Deploying site
                 // Just doing it locally for the time-being, a cheeky web-hook might be an alternative?
