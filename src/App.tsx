@@ -1,6 +1,7 @@
 import React, { Suspense } from "react";
 import "./App.css";
 import Navbar from "./components/navbar";
+import jquery from "jquery";
 import "bootstrap/dist/css/bootstrap.min.css";
 const Main = React.lazy(() => import("./components/main"));
 

@@ -85,3 +85,8 @@
   transition: 0.1s;
   transition-timing-function: ease-in-out;
 }
+
+.nav-item svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
