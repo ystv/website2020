@@ -1,9 +1,21 @@
 # Website2ElectricBoogaloo
-A little thought experiment for a new website written with a react frontend and django backend all in docker!
+
+So this has changed a lot since the initial idea, but the general plan is break up the old CSF php site into a modular, easily deployable system written in more modern languages and frameworks.
+
+The plan is use Next.js for the public-facing website
+
+React for a video management and new internal site
+
+Go and Node for REST and GraphQL APIs
+
+Throw each subdomain in a separate repo and dockerfile and throw nginx in front of it, wrap up in a docker compose bow and worry about emails later :((
+
+## THIS WILL ALL NEED REDOING
 
 To deploy the website (or to rebuild the website image) use jenkins to set build arg "build_id" (cleans up intermediate image):
 
 ### `docker-compose up -d --build --force-recreate --remove-orphans --build-arg BUILD_ID`
+
 ### `docker image prune --filter label=stage=builder --filter label=build=$BUILD_ID`
 
 To stop the website (and remove the images):
@@ -21,48 +33,3 @@ To remove all unused images (inc build images, WILL DELETE ALL UNUSED IMAGES ON 
 To update the external images (I think):
 
 ### `docker-compose pull`
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `yarn start`
-
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
