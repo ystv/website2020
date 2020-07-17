@@ -209,16 +209,17 @@ INSERT INTO video.files (
         encode_format,
         size
     )
-SELECT id,
-    video_id,
-    CONCAT('legacy', filename),
+SELECT vf.id,
+    vf.video_id,
+    CONCAT('legacy/', vf.filename),
     CASE
-        WHEN is_enabled THEN 'public'
+        WHEN vf.is_enabled THEN 'public'
         ELSE 'internal'
     END,
-    0,
+    en.id,
     size
-FROM public.video_files;
+FROM public.video_files vf
+    LEFT JOIN video.encode_formats en ON vf.video_file_type_name = en.name;
 -- +goose StatementEnd
 -- +goose Down
 -- +goose StatementBegin
