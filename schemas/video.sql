@@ -253,12 +253,8 @@ SELECT vf.id,
     size
 FROM public.video_files vf
     LEFT JOIN video.encode_formats en ON vf.video_file_type_name = en.name;
--- Migration public.video_boxes to video.series for nested set to adjacency list
--- UPDATE video.series
--- SET parent_series_id = ;
 -- +goose StatementEnd
 -- +goose Down
 -- +goose StatementBegin
 DROP SCHEMA video CASCADE;
-DROP SCHEMA people CASCADE;
 -- +goose StatementEnd
