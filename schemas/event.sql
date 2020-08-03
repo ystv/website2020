@@ -148,9 +148,10 @@ INSERT INTO event.crew (
         locked,
         ordering
     )
-SELECT event_signup_id,
-    crew_position_name,
-    member_id,
-    locked,
-    ordering
-FROM public.event_signup_crew;
+SELECT sc.event_signup_id,
+    pos.id,
+    sc.member_id,
+    sc.locked,
+    sc.ordering
+FROM public.event_signup_crew sc
+    LEFT JOIN event.positions pos ON sc.crew_position_name = pos.name;
