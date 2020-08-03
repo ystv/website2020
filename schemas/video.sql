@@ -29,11 +29,11 @@ CREATE TABLE video.series (
     tags text [],
     status text,
     created_at timestamptz NOT NULL DEFAULT NOW(),
-    created_by int,
+    created_by int REFERENCES people.users(user_id),
     updated_at timestamptz,
-    updated_by int,
+    updated_by int REFERENCES people.users(user_id),
     deleted_at timestamptz,
-    deleted_by int
+    deleted_by int REFERENCES people.users(user_id)
 );
 -- The files each have an encode_format that is used to convert the
 -- source file using the encode_format params to create the file.
@@ -83,11 +83,11 @@ CREATE TABLE video.items (
     preset int REFERENCES video.presets(id),
     broadcast_date timestamptz NOT NULL,
     created_at timestamptz NOT NULL DEFAULT NOW(),
-    created_by int,
+    created_by int REFERENCES people.users(user_id),
     updated_at timestamptz,
-    updated_by int,
+    updated_by int REFERENCES people.users(user_id),
     deleted_at timestamptz,
-    deleted_by int
+    deleted_by int REFERENCES people.users(user_id)
 );
 --
 -- video.playlists essentially youtube playlists
@@ -99,11 +99,11 @@ CREATE TABLE video.playlists (
     thumbnail text,
     status text NOT NULL DEFAULT 'internal',
     created_at timestamptz NOT NULL DEFAULT NOW(),
-    created_by int NOT NULL,
+    created_by int NOT NULL REFERENCES people.users(user_id),
     updated_at timestamptz,
-    updated_by int,
+    updated_by int REFERENCES people.users(user_id),
     deleted_at timestamptz,
-    deleted_by int
+    deleted_by int REFERENCES people.users(user_id)
 );
 -- We need to map that many to many relationship
 CREATE TABLE video.playlist_items (
