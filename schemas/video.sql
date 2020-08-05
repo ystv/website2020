@@ -51,6 +51,7 @@ CREATE TABLE video.encode_formats (
     name text NOT NULL,
     description text,
     mime_type text NOT NULL,
+    mode text NOT NULL,
     width int NOT NULL,
     height int NOT NULL,
     arguments text NOT NULL,
@@ -139,18 +140,20 @@ CREATE INDEX starttime ON video.hits USING btree(start_time);
 -- Views
 --
 -- View to easily turn URLs to series
-CREATE view video.series_paths as
+CREATE VIEW video.series_paths AS
 SELECT node.series_id,
     array_to_string(
         array_agg(
             parent.url
-            order by parent.lft asc
+            ORDER BY parent.lft ASC
         ),
         '/'
-    ) path
+    ) path,
+    node.status
 FROM video.series AS node,
     video.series AS parent
 WHERE node.lft BETWEEN parent.lft AND parent.rgt
+    AND parent.in_url
 GROUP BY node.series_id
 ORDER BY node.lft;
 --
@@ -217,6 +220,7 @@ INSERT INTO video.encode_formats (
         name,
         description,
         mime_type,
+        mode,
         width,
         height,
         arguments,
@@ -225,6 +229,7 @@ INSERT INTO video.encode_formats (
 SELECT name,
     description,
     media_type,
+    mode::text,
     width,
     height,
     'legacy',
