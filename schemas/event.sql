@@ -102,10 +102,10 @@ CREATE TABLE event.rich_positions (
 );
 COMMENT ON TABLE event.rich_positions IS 'adds extra metadata to an existing position. Used for the more common roles, to help 
 provide further information about a position';
-COMMENT ON COLUMN event.rich_positions(description) IS 'Whilst a normal position already includes a description, this goes into a lot more detail
-and will have it\'s own dedicated page for this to be displayed instead of a hover-over';
-COMMENT ON COLUMN event.rich_positions(training) IS 'Will be a URL to its wiki page / training video but displayed as a button to the user';
-COMMENT ON COLUMN event.rich_positions(resources) IS 'this would be to include useful articles, resources, videos, etc for this position. 
+COMMENT ON COLUMN event.rich_positions.description IS 'Whilst a normal position already includes a description, this goes into a lot more detail
+and will have it''s own dedicated page for this to be displayed instead of a hover-over';
+COMMENT ON COLUMN event.rich_positions.training IS 'Will be a URL to its wiki page / training video but displayed as a button to the user';
+COMMENT ON COLUMN event.rich_positions.resources IS 'this would be to include useful articles, resources, videos, etc for this position. 
 Probably keeping links formatted as markdown to keep the schema simple?';
 --
 -- Migrations
