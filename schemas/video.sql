@@ -84,11 +84,11 @@ CREATE TABLE video.items (
     preset int REFERENCES video.presets(id),
     broadcast_date timestamptz NOT NULL,
     created_at timestamptz NOT NULL DEFAULT NOW(),
-    created_by int REFERENCES people.users(user_id),
+    created_by int REFERENCES people.users(user_id) ON UPDATE CASCADE ON DELETE SET NULL,
     updated_at timestamptz,
-    updated_by int REFERENCES people.users(user_id),
+    updated_by int REFERENCES people.users(user_id) ON UPDATE CASCADE ON DELETE SET NULL,
     deleted_at timestamptz,
-    deleted_by int REFERENCES people.users(user_id)
+    deleted_by int REFERENCES people.users(user_id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 --
 -- video.playlists essentially youtube playlists
@@ -100,11 +100,11 @@ CREATE TABLE video.playlists (
     thumbnail text,
     status text NOT NULL DEFAULT 'internal',
     created_at timestamptz NOT NULL DEFAULT NOW(),
-    created_by int NOT NULL REFERENCES people.users(user_id),
+    created_by int REFERENCES people.users(user_id) ON UPDATE CASCADE ON DELETE SET NULL,
     updated_at timestamptz,
-    updated_by int REFERENCES people.users(user_id),
+    updated_by int REFERENCES people.users(user_id) ON UPDATE CASCADE ON DELETE SET NULL,
     deleted_at timestamptz,
-    deleted_by int REFERENCES people.users(user_id)
+    deleted_by int REFERENCES people.users(user_id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 -- We need to map that many to many relationship
 CREATE TABLE video.playlist_items (

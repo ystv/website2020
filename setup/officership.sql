@@ -27,8 +27,8 @@ UPDATE people.officership_teams SET
 WHERE name = 'technical';
 
 UPDATE people.officership_teams SET
-    name = 'Computing Team',
-    email_alias = 'computing',
+    name = 'Production Team',
+    email_alias = 'production',
     short_description = 'Making live and pre-recorded content',
     full_description = 'Responsible for "creating and organsing shows". Involving a load of things to do and skills to learn. '
 WHERE name = 'production';
