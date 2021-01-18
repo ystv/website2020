@@ -7,6 +7,7 @@ This repo contains the schemas for the website2020 project.
 - [developing](developing.md)
 - [searching](searching.md)
 - [viewcount](viewcount.md)
+- [webcams](webcams.md)
 
 ## Plan
 
@@ -38,7 +39,8 @@ You'll want to then add the schema to the database. You can either copy and past
 2. video.sql
 3. event.sql
 4. misc.sql
-5. creator.sql
+5. mail.sql
+6. creator.sql
 
 Then you will want to add load in the inital data from the SQL found in `/setup`.
 
