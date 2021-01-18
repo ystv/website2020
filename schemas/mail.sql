@@ -18,9 +18,10 @@ COMMENT ON TABLE mail.lists IS
 --
 -- mail.subscribers stores users who have subscribed to a mailing list
 CREATE TABLE mail.subscribers(
-    subscribe_id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
     list_id int NOT NULL REFERENCES mail.lists(list_id),
-    user_id int NOT NULL REFERENCES people.users(user_id)
+    user_id int NOT NULL REFERENCES people.users(user_id),
+    subscribe_id uuid DEFAULT uuid_generate_v4(),
+    CONSTRAINT subscribers_pkey PRIMARY KEY (user_id, subscribe_id)
 );
 COMMENT ON COLUMN mail.subscribers.subscribe_id IS
 'Using extra unique key since it will be used to unsubscribe from mailing lists
