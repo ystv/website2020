@@ -1,35 +1,55 @@
 # Website2ElectricBoogaloo
 
+This repo contains the schemas for the website2020 project.
+
+## Other docs
+
+- [developing](developing.md)
+- [searching](searching.md)
+- [viewcount](viewcount.md)
+- [webcams](webcams.md)
+
+## Plan
+
 So this has changed a lot since the initial idea, but the general plan is break up the old CSF php site into a modular, easily deployable system written in more modern languages and frameworks.
 
-The plan is use Next.js for the public-facing website
+- Next.js for the public-facing website
+- React for a video management and new internal site
+- Go and Node for REST and GraphQL APIs
 
-React for a video management and new internal site
+## Layout
 
-Go and Node for REST and GraphQL APIs
+`/schemas` - Database Schemas
+`/setup` - Inital database data
+`/planning` - Rough ideas of how the project is layed out
 
-Throw each subdomain in a separate repo and dockerfile and throw nginx in front of it, wrap up in a docker compose bow and worry about emails later :((
+## Initialising
 
-## THIS WILL ALL NEED REDOING
+### Dependencies
 
-To deploy the website (or to rebuild the website image) use jenkins to set build arg "build_id" (cleans up intermediate image):
+- postgres
+- S3 or equivalent (i.e. minio)
+- docker (optional)
 
-### `docker-compose up -d --build --force-recreate --remove-orphans --build-arg BUILD_ID`
+You'll want to setup the databases first, currently developed using postgres.
 
-### `docker image prune --filter label=stage=builder --filter label=build=$BUILD_ID`
+You'll want to then add the schema to the database. You can either copy and paste the SQL or use `psql -h {host} -d {database} -f {schema_file}`. You will want to create it in the following order:
 
-To stop the website (and remove the images):
+1. people.sql
+2. video.sql
+3. event.sql
+4. misc.sql
+5. mail.sql
+6. creator.sql
 
-### `docker-compose down --rmi 'all' --remove-orphans`
+Then you will want to add load in the inital data from the SQL found in `/setup`.
 
-To list all images on a machine:
+After the data is loaded you will want to setup each software stack in the following order:
 
-### `docker image ls`
+1. web-auth
+2. web-api
+3. my-tv
+4. creator-studio
+5. public-site
 
-To remove all unused images (inc build images, WILL DELETE ALL UNUSED IMAGES ON THE SYSTEM):
-
-### `docker image prune`
-
-To update the external images (I think):
-
-### `docker-compose pull`
+Once all configured following their own setup guides you should be setup!
