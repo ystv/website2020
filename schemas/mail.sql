@@ -1,5 +1,3 @@
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
 CREATE SCHEMA mail;
 --
 -- Table creations
@@ -46,4 +44,4 @@ FROM public.mllists;
 --
 -- Migrate from public.mlusersinlists to mail.subscribers
 INSERT INTO mail.subscribers(list_id, user_id)
-SELECT mailinglistid, userid FROM public.mlusersinlists; 
+SELECT mailinglistid, userid FROM public.mlusersinlists;

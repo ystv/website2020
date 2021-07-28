@@ -33,7 +33,9 @@ So this has changed a lot since the initial idea, but the general plan is break 
 
 You'll want to setup the databases first, currently developed using postgres.
 
-You'll want to then add the schema to the database. You can either copy and paste the SQL or use `psql -h {host} -d {database} -f {schema_file}`. You will want to create it in the following order:
+You'll want to then add the schemas to the database. You can either copy and paste the SQL or use `psql -h {host} -d {database} -f {schema_file}`. If you want to setup all tables automatically, `cd` into the `schemas` folder then execute `psql -h {host} -d {database} -f meta.sql`. Alternatively, if you want to do it manually, you will want to create it in the following order:
+
+Add extensions: `uuid-ossp` and `tsm_system_rows`.
 
 1. people.sql
 2. video.sql
