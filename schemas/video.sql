@@ -73,7 +73,7 @@ CREATE TABLE video.items (
     url text NOT NULL,
     description text NOT NULL DEFAULT '',
     thumbnail text NOT NULL DEFAULT '',
-    duration interval,
+    duration int NOT NULL DEFAULT 0,
     views int NOT NULL DEFAULT 0,
     genre int NOT NULL DEFAULT 0,
     tags text [],
@@ -88,6 +88,9 @@ CREATE TABLE video.items (
     deleted_at timestamptz,
     deleted_by int REFERENCES people.users(user_id) ON UPDATE CASCADE ON DELETE SET NULL
 );
+COMMENT ON COLUMN video.items.duration IS
+'Seconds is accurate enough for VOD. Playout software should probe
+the file and store it''s own time, maybe in ms?';
 --
 -- video.playlists essentially youtube playlists
 --
@@ -202,7 +205,7 @@ SELECT id,
     COALESCE(display_name, url_name),
     url_name,
     COALESCE(description, ''),
-    duration,
+    COALESCE(EXTRACT(EPOCH FROM duration)::int, 0),
     regexp_split_to_array(keywords, ' '),
     ordering,
     CASE

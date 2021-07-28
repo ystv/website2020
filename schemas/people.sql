@@ -18,6 +18,7 @@ CREATE TABLE people.users (
     first_name text NOT NULL,
     last_name text NOT NULL,
     nickname text NOT NULL,
+    login_type text NOT NULL,
     password text NOT NULL,
     salt text NOT NULL,
     avatar text,
@@ -26,12 +27,14 @@ CREATE TABLE people.users (
     enabled boolean NOT NULL DEFAULT true,
     created_at timestamptz NOT NULL DEFAULT NOW(),
     created_by int REFERENCES people.users(user_id) ON UPDATE CASCADE ON DELETE SET NULL,
-        updated_at timestamptz,
-        updated_by int REFERENCES people.users(user_id) ON UPDATE CASCADE ON DELETE SET NULL,
-        deleted_at timestamptz,
-        deleted_by int REFERENCES people.users(user_id) ON UPDATE CASCADE ON DELETE SET NULL
+    updated_at timestamptz,
+    updated_by int REFERENCES people.users(user_id) ON UPDATE CASCADE ON DELETE SET NULL,
+    deleted_at timestamptz,
+    deleted_by int REFERENCES people.users(user_id) ON UPDATE CASCADE ON DELETE SET NULL,
+    CONSTRAINT loginchk CHECK (login_type IN ('internal', 'sso'))
 );
 COMMENT ON COLUMN people.users.email IS 'Would be not null, but we have existing data';
+COMMENT ON COLUMN people.users.login_type IS 'internal - uses pw in this table to authenticate. sso - uses external auth';
 --
 -- people.roles implementing RBAC, user can have many roles, roles have many permissions
 CREATE TABLE people.roles (
@@ -116,6 +119,7 @@ INSERT INTO people.users (
         first_name,
         last_name,
         nickname,
+        login_type,
         password,
         salt,
         avatar,
@@ -142,6 +146,7 @@ SELECT id,
     first_name,
     last_name,
     first_name,
+    'internal',
     COALESCE(newpw, ''),
     salt,
     photo_file,
