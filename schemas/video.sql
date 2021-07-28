@@ -133,8 +133,9 @@ CREATE TABLE video.hits (
     mode text NOT NULL,
     ip_address inet NOT NULL,
     client_info text NOT NULL,
-    percent float8 NOT NULL,
-    video_id int NOT NULL REFERENCES video.items(video_id) ON UPDATE CASCADE ON DELETE CASCADE
+    percent integer NOT NULL,
+    video_id int NOT NULL REFERENCES video.items(video_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT modechk CHECK (mode IN ('watch', 'download', 'embed'))
 );
 CREATE INDEX starttime ON video.hits USING btree(start_time);
 --
@@ -259,3 +260,21 @@ SELECT vf.id,
     size
 FROM public.video_files vf
     LEFT JOIN video.encode_formats en ON vf.video_file_type_name = en.name;
+-- Migration from public.video_hits to video.hits
+INSERT INTO video.hits (
+    hit_id,
+    start_time,
+    mode,
+    ip_address,
+    client_info,
+    percent,
+    video_id
+)
+SELECT id,
+    start_time,
+    mode,
+    ip_address,
+    client_info,
+    percent,
+    video_id
+FROM public.video_hits;
