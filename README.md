@@ -43,6 +43,7 @@ Add extensions: `uuid-ossp` and `tsm_system_rows`.
 4. misc.sql
 5. mail.sql
 6. creator.sql
+7. playout.sql
 
 Then you will want to add load in the inital data from the SQL found in `/setup`.
 

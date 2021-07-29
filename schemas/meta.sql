@@ -21,6 +21,9 @@ CREATE EXTENSION IF NOT EXISTS "tsm_system_rows";
 \echo 'loading creator...'
 \i creator.sql
 \echo 'loaded creator'
+\echo 'loading playout...'
+\i playout.sql
+\echo 'loaded playout'
 \echo 'loading viewcount, might take a while...'
 UPDATE video.items
 SET views = (SELECT count(*) FROM public.video_hits
