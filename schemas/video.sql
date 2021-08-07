@@ -57,8 +57,12 @@ CREATE TABLE video.encode_formats (
     width int NOT NULL,
     height int NOT NULL,
     arguments text NOT NULL,
+    file_suffix text NOT NULL,
     watermarked bool NOT NULL
 );
+COMMENT ON COLUMN video.encode_formats.file_suffix IS
+'When a video has been created by this format, it will be stored with the existing
+filename + the file_suffix. If there is no file_suffix is will use the format ID';
 CREATE TABLE video.presets_encode_formats (
     preset_id int REFERENCES video.presets(id) ON UPDATE CASCADE ON DELETE CASCADE,
     encode_format_id int REFERENCES video.encode_formats(id) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -236,6 +240,7 @@ INSERT INTO video.encode_formats (
         width,
         height,
         arguments,
+        file_suffix,
         watermarked
     )
 SELECT name,
@@ -245,6 +250,7 @@ SELECT name,
     width,
     height,
     'legacy',
+    '',
     CASE
         WHEN "mode"::text LIKE '%download%' THEN TRUE
         ELSE FALSE
