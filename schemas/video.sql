@@ -129,6 +129,7 @@ CREATE TABLE video.files (
     status text NOT NULL,
     encode_format int NOT NULL REFERENCES video.encode_formats(id),
     size bigint NOT NULL DEFAULT 0,
+    is_source bool NOT NULL DEFAULT false,
     CONSTRAINT status_chk CHECK (status IN ('processing', 'private', 'internal', 'public'))
 );
 COMMENT ON TABLE video.files IS 'Supporting video files for a video item';
