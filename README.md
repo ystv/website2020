@@ -4,6 +4,8 @@ This repo contains the schemas for the website2020 project.
 
 ## Other docs
 
+- [db](db)
+- [old website migration](migrations)
 - [developing](developing.md)
 - [searching](searching.md)
 - [viewcount](viewcount.md)
@@ -21,7 +23,7 @@ So this has changed a lot since the initial idea, but the general plan is break 
 
 `/schemas` - Database Schemas
 `/setup` - Inital database data
-`/planning` - Rough ideas of how the project is layed out
+`/planning` - Rough ideas of how the project is laid out
 
 ## Initialising
 

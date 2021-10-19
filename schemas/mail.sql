@@ -26,22 +26,3 @@ COMMENT ON COLUMN mail.subscribers.subscribe_id IS
 where the user doesn''t need to be signed-in';
 COMMENT ON TABLE mail.subscribers IS
 'Relationship of users subscribing to mailing lists';
---
--- Migrations
---
--- Migrate from public.mllists to mail.lists
-INSERT INTO mail.lists(
-        list_id,
-        name,
-        description,
-        alias
-    )
-SELECT id,
-    mailinglistname,
-    "Description",
-    left(address, strpos(address, '@') - 1)
-FROM public.mllists;
---
--- Migrate from public.mlusersinlists to mail.subscribers
-INSERT INTO mail.subscribers(list_id, user_id)
-SELECT mailinglistid, userid FROM public.mlusersinlists;

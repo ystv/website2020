@@ -1,8 +1,4 @@
-\echo 'ystv-website2020 database initialisation';
-\echo 'loading extensions...'
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-CREATE EXTENSION IF NOT EXISTS "tsm_system_rows";
-\echo 'loaded extensions'
+\echo 'ystv-website2020 database migration';
 \echo 'loading people...'
 \i people.sql
 \echo 'loaded people'
