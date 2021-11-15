@@ -28,7 +28,7 @@ CREATE TABLE playout.channel (
     scheduled_end timestamptz NOT NULL,
     CONSTRAINT name_chk CHECK (char_length(name) <= 30),
     CONSTRAINT output_type_chk CHECK (output_type IN ('hls', 'iframe')),
-    CONSTRAINT visibility_chk CHECK (visibility IN ('public', 'internal')),
+    CONSTRAINT visibility_chk CHECK (visibility IN ('public', 'internal', 'unlisted')),
     CONSTRAINT status_chk CHECK (status IN ('live', 'scheduled', 'cancelled', 'finished')),
     CONSTRAINT time_chk CHECK (scheduled_end > scheduled_start)
 );
