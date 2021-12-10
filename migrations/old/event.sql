@@ -31,17 +31,25 @@ FROM public.events;
 -- We don't copy member_group_name since we are trying to move away
 -- from permissions by the role/group and by an individual permission.
 INSERT INTO event.positions (
+        group_id,
         name,
-        description,
-        admin
+        admin,
+        brief_description,
+        full_description,
+        image,
+        training_url
     )
-SELECT name,
+SELECT 1,
+    name,
+    has_admin_rights,
     COALESCE(description, ''),
-    has_admin_rights
+    '',
+    '',
+    ''
 FROM public.crew_positions;
 --
--- Migration public.event_signups to event.signups
-INSERT INTO event.signups (
+-- Migration public.event_signup_sheets to event.signups
+INSERT INTO event.signup_sheets (
         signup_id,
         event_id,
         title,
