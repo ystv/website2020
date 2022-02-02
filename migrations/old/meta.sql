@@ -1,4 +1,4 @@
-\echo 'ystv-website2020 database migration';
+\echo 'ystv-website2020 database migration'
 \echo 'loading people...'
 \i people.sql
 \echo 'loaded people'
