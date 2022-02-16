@@ -2,6 +2,7 @@
 INSERT INTO people.users (
         user_id,
         username,
+        university_username,
         email,
         first_name,
         last_name,
@@ -26,6 +27,7 @@ SELECT id,
             CONCAT(first_name, '.', last_name, '.', id::text)
         )
     ),
+    COALESCE(username, ''),
     CASE
         WHEN (COALESCE(email_address, '') = '') THEN CONCAT('noreply+', id::text, '@ystv.co.uk')
         ELSE email_address
