@@ -2,15 +2,6 @@
 
 This repo contains the schemas for the website2020 project.
 
-## Other docs
-
-- [db](db)
-- [old website migration](migrations)
-- [developing](developing.md)
-- [searching](searching.md)
-- [viewcount](viewcount.md)
-- [webcams](webcams.md)
-
 ## Plan
 
 So this has changed a lot since the initial idea, but the general plan is break up the old CSF php site into a modular, easily deployable system written in more modern languages and frameworks.
@@ -21,9 +12,12 @@ So this has changed a lot since the initial idea, but the general plan is break 
 
 ## Layout
 
-`/schemas` - Database Schemas
-`/setup` - Inital database data
-`/planning` - Rough ideas of how the project is laid out
+`/planDesign` - Plan the project overview
+`/planMethod` - Plan the specifics of a website component
+`/schemaStructure` - Create the database
+`/schemaData` - Initialise the database (add in data)
+`/schemaMigrate` - Migrate the database from an old schema
+`/utilFiles` - Repeated config files like docker, nginx etc.
 
 ## Initialising
 
