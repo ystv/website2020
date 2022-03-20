@@ -124,21 +124,25 @@ case "$method" in
 	## Open database and output to a file
 	## Do different things based on [export] or [export-data]
 	
-	PGPASSFILE=$pgpass_file pg_dump \
-		-h $host \
-		-U $user \
-		-p $port \
-		-d $db \
-		> $method_file
-
-	# Export the users and roles 
+	# Export the users and roles
+	## We're excluding the password values as then the
+	## running user doesn't need to be "Superser". This
+	## does mean the user will need to regen the passwords
 	PGPASSFILE=$pgpass_file pg_dumpall \
 		--roles-only \
 		--no-role-passwords \
 		-h $host \
 		-U $user \
 		-p $port \
-		> glob.$method_file
+		> $method_file
+
+	PGPASSFILE=$pgpass_file pg_dump \
+		-h $host \
+		-U $user \
+		-p $port \
+		-d $db \
+		--create \
+		>> $method_file
 	;;
  import)
 	log "Importing database from [$method_file]"
