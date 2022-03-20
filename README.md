@@ -21,6 +21,31 @@ So this has changed a lot since the initial idea, but the general plan is break 
 
 ## Initialising
 
+### Developing database locally
+You will need a PostgreSQL instance running which you can get running easy with Docker.
+```
+docker run \
+    -d \
+    --name ystv-website2020-db \
+    -e POSTGRES_PASSWORD=changeme \
+    -p 5432:5432 \
+    -v ystv-website2020-db-data:/var/lib/postgresql/data \
+    postgres
+```
+- Switch `changeme` with a password you want
+- This will create a Docker volume called `ystv-website-2020-db-data` to allow data persistence
+- Can be started and stopped with `docker start/stop ystv-website2020-db`
+
+Can access the built-in psql client with
+```
+docker exec -it ystv-website2020-db psql -U postgres
+```
+
+You will need to clone the repo to your computer in order to initialise the database with the correct information. It is recommended you setup access to GitHub with SSH. (which you can read more about [here](https://docs.github.com/en/authentication/connecting-to-github-with-ssh))
+```
+git clone git@github.com:ystv/website2020
+```
+
 ### Dependencies
 
 - postgres
