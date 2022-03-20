@@ -88,12 +88,12 @@ done
 
 [[ -n "$verbose" ]] && log "Verbose enabled..."
 [[ -n "$force" ]] && log "Force enabled..."
-
+log "Applying [$method] on [$method_file]"
 
 # Check for conflicts in the config options
 if [[ -n "$psql_file" ]]; then
 	log "Config file [$psql_file] given"
-	[[ -z "$host$port$db$user" ]] || warn "2xconfig"
+	[[ -z "$host$port$db$user" ]] || warn "2xconfig" "$host:$port:$db:$user"
 	[[ -f "$psql_file" ]] || { error "EXconfig" "$psql_file"; exit 1; }
 
 # If no config file is given, are there config variables?
