@@ -41,6 +41,33 @@ Can access the built-in psql client with
 docker exec -it ystv-website2020-db psql -U postgres
 ```
 
+It's recommended to also install `psql` which is not available in Ubuntu 20.40's repos so it will need to be added.
+
+Add PostgreSQL repo signing key
+```
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+```
+
+Add PostgreSQL repo
+```
+echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/postgresql-pgdg.list > /dev/null
+```
+
+Update apt metdata
+```
+sudo apt update
+```
+
+Install `psql` client
+```
+sudo apt install postgresql-client-common postgresql-client-14
+```
+
+If you started Postgres in Docker you will be able to connect using:
+```
+psql -h localhost
+```
+
 You will need to clone the repo to your computer in order to initialise the database with the correct information. It is recommended you setup access to GitHub with SSH. (which you can read more about [here](https://docs.github.com/en/authentication/connecting-to-github-with-ssh))
 ```
 git clone git@github.com:ystv/website2020
