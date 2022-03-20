@@ -2,11 +2,11 @@ verbose=''
 force=''
 # Manaully set variables
 host=''
-port=''
+port='5432'
 db=''
 user=''
 # Automated variables
-psql_file=''
+pgpass_file=''
 # Method variables
 method=''
 method_file=''
@@ -26,7 +26,7 @@ Usage...
  -D --database		Set the name of the database
  -U --user		Set the database user
 
- -c --config [..]	Use a psql config file
+ -c --config [..]	Use a pgpass config file
  -f --force		Force any file rewrites or conflicts
 
  -v --verbose		Verbose
@@ -74,7 +74,7 @@ while [[ $# -gt 0 ]]; do
 	 	 -D|--database) db="$2" ;;
 	 	 -U|--user) user="$2" ;;
 
-		 -c|--config) psql_file="$2" ;;
+		 -c|--config) pgpass_file="$2" ;;
 		 -*|--*) error "NAarg" "$1"; exit 1 ;;
 		 *)
 			# Check if method has not already been set
@@ -91,10 +91,10 @@ done
 log "Applying [$method] on [$method_file]"
 
 # Check for conflicts in the config options
-if [[ -n "$psql_file" ]]; then
-	log "Config file [$psql_file] given"
+if [[ -n "$pgpass_file" ]]; then
+	log "Config file [$pgpass_file] given"
 	[[ -z "$host$port$db$user" ]] || warn "2xconfig" "$host:$port:$db:$user"
-	[[ -f "$psql_file" ]] || { error "EXconfig" "$psql_file"; exit 1; }
+	[[ -f "$pgpass_file" ]] || { error "EXconfig" "$pgpass_file"; exit 1; }
 
 # If no config file is given, are there config variables?
 elif [[ -z "$host" || -z "$port" || -z "$db" || -z "$user" ]]; then
@@ -117,13 +117,28 @@ case "$method" in
 		fi
 	else
 		log "Writing to a new file: [$method_file]"
-		#touch "$2"
 	fi
 
 
 	# EXPORT DATA
 	## Open database and output to a file
 	## Do different things based on [export] or [export-data]
+	
+	PGPASSFILE=$pgpass_file pg_dump \
+		-h $host \
+		-U $user \
+		-p $port \
+		-d $db \
+		> $method_file
+
+	# Export the users and roles 
+	PGPASSFILE=$pgpass_file pg_dumpall \
+		--roles-only \
+		--no-role-passwords \
+		-h $host \
+		-U $user \
+		-p $port \
+		> glob.$method_file
 	;;
  import)
 	log "Importing database from [$method_file]"
