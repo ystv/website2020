@@ -152,6 +152,14 @@ case "$method" in
 
 	# IMPORT
 	## Open file and import data into the database
+
+	PGPASSFILE=$pgpass_file psql \
+		-h $host \
+		-U $user \
+		-p $port \
+		-f $method_file
+
+	# TODO: Ask user if they want to regenerate db passwords
 	;;
  migrate)
 	log "Migrating data from [$method_file]"
