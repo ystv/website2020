@@ -1,6 +1,6 @@
 \echo 'ystv_website2020 schema/table creation'
 \if :{?owner_user}
-    \c :owner_user
+    SET ROLE :owner_user;
 \endif
 \echo 'creating people'
 \i people.sql

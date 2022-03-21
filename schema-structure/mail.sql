@@ -1,4 +1,4 @@
-CREATE SCHEMA mail;
+CREATE SCHEMA IF NOT EXISTS mail;
 --
 -- Table creations
 --

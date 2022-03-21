@@ -183,7 +183,16 @@ case "$method" in
 	[[ -f "$method_file" ]] || { error "EXfile" "$method_file"; exit 1; }
 
 	# Import migration data (pg_dumpall output)
-	psql -f "$method_file" || { error "PSQLfail" "migrate import"; exit 1; }
+	## Since we haven't created the database yet we're using "postgres" as what
+	## we connect too (in postgres you always need to connect to a specifc db)
+	## 
+	## TODO: Do we want to presume the database has already been made?
+	psql -f "$method_file" \
+		-h $host \
+		-U $user \
+		-p $port \
+		-d postgres \
+	|| { error "PSQLfail" "migrate import"; exit 1; }
 
 	# Set user/role names
 	owner_user="${db}_owner"
@@ -194,6 +203,10 @@ case "$method" in
 	# Initialise database
 	pushd db-init
 	psql -f "_meta.sql" \
+		-h $host \
+		-U $user \
+		-p $port \
+		-d postgres \
 		-v db_name=$db \
 		-v owner_password=$owner_passwd \
 		-v wapi_password=$webapi_passwd \
@@ -203,20 +216,45 @@ case "$method" in
 	# Create tables
 	pushd schema-structure
 	psql -f "_meta.sql" \
+		-h $host \
+		-U $user \
+		-p $port \
+		-d $db \
 		-v owner_user=$owner_user \
 		|| { error "PSQLfail" "migrate schema-structure"; exit 1; }
 	popd
 
-	# Migrate from old to new
-	pushd schema-migrate/pre2022
+	# Migration
+	pushd schema-migrate/pre2020
+
+	# Run pre-migration actions
+	pushd pre-actions
 	psql -f "_meta.sql" \
+		-h $host \
+		-U $user \
+		-p $port \
+		-d $db \
 		|| { error "PSQLfail" "migrate schema-migrate"; exit 1; }
 	popd
 
-	# Run post-migration initialisation
-	pushd schema-data
+	# Migrate from old to new
 	psql -f "_meta.sql" \
+		-h $host \
+		-U $user \
+		-p $port \
+		-d $db \
+		|| { error "PSQLfail" "migrate schema-migrate"; exit 1; }
+
+	# Run post-migration actions
+	pushd post-actions
+	psql -f "_meta.sql" \
+		-h $host \
+		-U $user \
+		-p $port \
+		-d $db \
 		|| { error "PSQLfail" "migrate schema-data"; exit 1; }
+	popd
+
 	popd
 
 	# Output the passwords to the user

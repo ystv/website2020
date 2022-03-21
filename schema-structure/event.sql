@@ -1,5 +1,5 @@
 -- Creating event schema, all event calendar related tables are stored here
-CREATE SCHEMA event;
+CREATE SCHEMA IF NOT EXISTS event;
 -- We will initiate the tables in the following order:
 -- 1. event.events REFERENCES people.users
 -- 2. event.signup_sheets REFERENCES event.events

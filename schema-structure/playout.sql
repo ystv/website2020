@@ -5,7 +5,7 @@
 -- The longevity of this schema is dubious since it is liked to
 -- be merged into the ystv/playout DB.
 --
-CREATE SCHEMA playout;
+CREATE SCHEMA IF NOT EXISTS playout;
 --
 -- We will initate the tables in the following order,
 -- in order to ensure that the foreign keys get setup:
