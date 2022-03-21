@@ -49,6 +49,7 @@ declare -A messages=( \
 	["EXconfig"]="Config file does not exist" \
 	["TMPconfig"]="Temporary config file already exists" \
 	["ERpasswd"]="Password failed to generate" \
+	["PSQLfail"]="PSQL command failed" \
 )
 error() {
 	echo "ERROR: ${messages[$1]} [$2]" >&2 ;}
@@ -151,11 +152,17 @@ case "$method" in
 	## does mean the user will need to regen the passwords
 	case "$method" in
 	 export)
-		pg_dumpall --roles-only --no-role-passwords > "$method_file"
-		pg_dump --create >> "$method_file"
+		pg_dumpall --roles-only --no-role-passwords \
+		 > "$method_file" \
+		 || { error "PSQLfail" "pg_dumpall"; exit 1; }
+		pg_dump --create \
+		 >> "$method_file" \
+		 || { error "PSQLfail" "pg_dump"; exit 1; }
 		;;
 	 export-data)
-		pg_dump --create > "$method_file"
+		pg_dump --create \
+		 > "$method_file" \
+		 || { error "PSQLfail" "pg_dump"; exit 1; }
 		;;
 	esac ;;
 
@@ -166,7 +173,7 @@ case "$method" in
 	[[ -f "$method_file" ]] || { error "EXfile" "$method_file"; exit 1; }
 
 	# Import into database
-	psql -f "$method_file"
+	psql -f "$method_file" || { error "PSQLfail" "import"; exit 1; }
 	;;
 
  migrate)
@@ -176,7 +183,7 @@ case "$method" in
 	[[ -f "$method_file" ]] || { error "EXfile" "$method_file"; exit 1; }
 
 	# Import migration data (pg_dumpall output)
-	psql -f "$method_file"
+	psql -f "$method_file" || { error "PSQLfail" "migrate import"; exit 1; }
 
 	# Set user/role names
 	owner_user="${db}_owner"
@@ -189,29 +196,33 @@ case "$method" in
 	psql -f "_meta.sql" \
 		-v db_name=$db \
 		-v owner_password=$owner_passwd \
-		-v wapi_password=$webapi_passwd
+		-v wapi_password=$webapi_passwd \
+	 	|| { error "PSQLfail" "migrate db-init"; exit 1; }
 	popd
 
 	# Create tables
 	pushd schema-structure
 	psql -f "_meta.sql" \
-		-v owner_user=$owner_user
+		-v owner_user=$owner_user \
+		|| { error "PSQLfail" "migrate schema-structure"; exit 1; }
 	popd
 
 	# Migrate from old to new
 	pushd schema-migrate/pre2022
-	psql -f "_meta.sql"
+	psql -f "_meta.sql" \
+		|| { error "PSQLfail" "migrate schema-migrate"; exit 1; }
 	popd
 
 	# Run post-migration initialisation
 	pushd schema-data
-	psql -f "_meta.sql"
+	psql -f "_meta.sql" \
+		|| { error "PSQLfail" "migrate schema-data"; exit 1; }
 	popd
 
 	# Output the passwords to the user
-	printf "\nCREDENTIALS"
-	printf "owner:\nusername: $owner_user\npassword: $owner_passwd"
-	printf "wapi:\nusername: $webapi_user\npassword: $webapi_passwd"
+	echo -e "CREDENTIALS"
+	echo -e "owner:\nusername: $owner_user\npassword: $owner_passwd"
+	echo -e "wapi:\nusername: $webapi_user\npassword: $webapi_passwd"
 	;;
 
  '')
