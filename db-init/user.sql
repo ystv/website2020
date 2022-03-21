@@ -2,7 +2,7 @@
 -- - db_name
 -- - owner_password
 -- - wapi_password
-\echo 'creating database users and roles'
+\echo 'creating database users and role'
 \set owner_user :db_name'_owner'
 \set apps_role :db_name'_apps'
 \set wapi_user :db_name'_wapi'
