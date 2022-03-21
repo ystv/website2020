@@ -13,7 +13,10 @@
 \echo setting up database :"db_name"
 
 \echo 'creating database'
-CREATE DATABASE :db_name WITH OWNER :owner_user;
+CREATE DATABASE :db_name;
+
+\echo 'altering database owner'
+ALTER DATABASE :db_name OWNER TO :owner_user;
 
 \echo 'revoking default connection privileges from public'
 REVOKE CONNECT ON DATABASE :db_name FROM PUBLIC;
