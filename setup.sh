@@ -163,10 +163,6 @@ case "$method" in
 
 	# Import into database
 	psql -f "$method_file"
-
-	# TODO: Ask user if they want to regenerate db passwords
-	## Then actually use it
-	log "New generated password... $(gen_passwd)"
 	;;
 
  migrate)
@@ -181,7 +177,7 @@ case "$method" in
 	# Set user/role names
 	owner_user="${db}_owner"
 	owner_passwd="$(gen_passwd)"
-	webapi_passwd="champ"
+	webapi_passwd="$(gen_passwd)"
 
 	# Initialise database
 	pushd db-init
@@ -206,6 +202,9 @@ case "$method" in
 	pushd schema-data
 	psql -f "_meta.sql"
 	popd
+
+	echo "New owner ($owner_user) password: [$owner_passwd]"
+	echo "New webapi password: [$webapi_passwd]"
 	;;
 
  '')
