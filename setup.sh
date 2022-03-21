@@ -1,5 +1,6 @@
 verbose=''
 force=''
+overwrite=''
 # Manaully set variables
 host=''
 port='5432'
@@ -10,7 +11,6 @@ pgpass_file=''
 # Method variables
 method=''
 method_file=''
-
 
 get_help() { printf "
 Usage...
@@ -46,6 +46,7 @@ declare -A messages=( \
 	["0xconfig"]="DB values have not been set" \
 	["2xconfig"]="DB values have been set twice - default to config file" \
 	["EXconfig"]="Config file does not exist" \
+	["TMPconfig"]="Temporary config file already exists" \
 )
 error() {
 	echo "ERROR: ${messages[$1]} [$2]" >&2 ;}
@@ -91,18 +92,28 @@ done
 log "Applying [$method] on [$method_file]"
 
 # Check for conflicts in the config options
+## Doesn't check values that have defaults
 if [[ -n "$pgpass_file" ]]; then
 	log "Config file [$pgpass_file] given"
-	[[ -z "$host$port$db$user" ]] || warn "2xconfig" "$host:$port:$db:$user"
+	[[ -z "$host$db$user" ]] || warn "2xconfig" "$pgpass_file"
 	[[ -f "$pgpass_file" ]] || { error "EXconfig" "$pgpass_file"; exit 1; }
 
 # If no config file is given, are there config variables?
-elif [[ -z "$host" || -z "$port" || -z "$db" || -z "$user" ]]; then
+## Doesn't check values that have defaults
+elif [[ -z "$host" || -z "$db" || -z "$user" ]]; then
 	error "0xconfig" "$host:$port:$db:$user"; exit 1;
 
 else
-	log "Config variables [$host:$port:$db:$user] given"
+	pgpass_file=".pgpass.temp"
+	[[ -f "$pgpass_file" ]] && warn "TMPconfig" "$pgpass_file" 
+	log "Saving [$host:$port:$db:$user] to [$pgpass_file]"
+
+	echo "$host:$port:$db:$user" > "$pgpass_file"
 fi
+
+
+PGPASSFILE="$pgpass_file"
+log "Using pgpass_file with contents: $(cat $PGPASSFILE)"
 
 
 case "$method" in
@@ -112,10 +123,11 @@ case "$method" in
 	# Test if file already exists (risking writing over a file)
 	if [[ -f "$method_file" ]]; then
 		if [[ -n "$force" ]]
-			then warn "RWfile" "$method_file" # Append instead
+			then warn "RWfile" "$method_file"; overwrite=''
 			else error "RWfile" "$method_file"; exit 1
 		fi
 	else
+		overwrite='true'
 		log "Writing to a new file: [$method_file]"
 	fi
 
@@ -128,22 +140,22 @@ case "$method" in
 	## We're excluding the password values as then the
 	## running user doesn't need to be "Superser". This
 	## does mean the user will need to regen the passwords
-	PGPASSFILE=$pgpass_file pg_dumpall \
-		--roles-only \
-		--no-role-passwords \
-		-h $host \
-		-U $user \
-		-p $port \
-		> $method_file
+	case "$method" in
+	 export)
+		if [[ -n "$overwrite" ]]
+			then pg_dumpall --roles-only --no-role-passwords > "$method_file"
+			else pg_dumpall --roles-only --no-role-passwords >> "$method_file"
+		fi
+		pg_dump --create >> "$method_file"
+		;;
+	 export-date)
+		if [[ -n "$overwrite" ]]
+			then pg_dump --create > "$method_file"
+			else pg_dump --create >> "$method_file"
+		fi
+		;;
+	esac ;;
 
-	PGPASSFILE=$pgpass_file pg_dump \
-		-h $host \
-		-U $user \
-		-p $port \
-		-d $db \
-		--create \
-		>> $method_file
-	;;
  import)
 	log "Importing database from [$method_file]"
 
@@ -152,15 +164,11 @@ case "$method" in
 
 	# IMPORT
 	## Open file and import data into the database
-
-	PGPASSFILE=$pgpass_file psql \
-		-h $host \
-		-U $user \
-		-p $port \
-		-f $method_file
+	psql -f "$method_file"
 
 	# TODO: Ask user if they want to regenerate db passwords
 	;;
+
  migrate)
 	log "Migrating data from [$method_file]"
 
@@ -172,64 +180,40 @@ case "$method" in
 
 	# Import migration data
 	## Presuming we're working with a pg_dumpall output
-	PGPASSFILE=$pgpass_file psql \
-	 	-h $host \
-	 	-U $user \
-	 	-p $port \
-	 	-f $method_file
+	psql -f "$method_file"
 
 	# Set user/role names
 	owner_user="${db}_owner"
-	apps_role="${db}_apps"
+	owner_passwd="pog"
+	webapi_passwd="champ"
+	#apps_role="${db}_apps"
 
-	# Generate user passwords
-	owner_password="pog"
-	wapi_password="champ"
 
 	# Initialise database
 	pushd db-init
-	PGPASSFILE=$pgpass_file psql \
-		-h $host \
-		-U $user \
-		-p $port \
+	psql -f "_meta.sql" \
 		-v db_name=$db \
-		-v owner_password=$owner_password \
-		-v wapi_password=$wapi_password \
-		-f _meta.sql
+		-v owner_password=$owner_passwd \
+		-v wapi_password=$webapi_passwd
 	popd
 
 	# Create tables
 	pushd schema-structure
-	PGPASSFILE=$pgpass_file \
-	psql \
-		-h $host \
-		-U $user \
-		-p $port \
-		-d $db \
-		-v owner_user=$owner_user \
-		-f _meta.sql
+	psql -f "_meta.sql" \
+		-v owner_user=$owner_user
 	popd
 
 	# Migrate from old to new
 	pushd schema-migrate/pre2022
-	PGPASSFILE=$pgpass_file psql \
-		-h $host \
-		-U $user \
-		-p $port \
-		-d $db \
-		-f _meta.sql
+	psql -f "_meta.sql"
 	popd
 
 	# Run post-migration initialisation
 	pushd schema-data
-	PGPASSFILE=$pgpass_file psql \
-		-h $host \
-		-U $user \
-		-p $port \
-		-d $db \
-		-f _meta.sql
+	psql -f "_meta.sql"
 	popd
 	;;
+
  '')
 	warn "0xmethod" "$method"
 	# SETUP
@@ -237,5 +221,6 @@ case "$method" in
 	## Run the database data setup
 	## Run the tests
 	;;
+
  *) error "NAmethod" "$method"; exit 1 ;;
 esac
