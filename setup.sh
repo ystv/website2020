@@ -1,5 +1,6 @@
 verbose=''
 force=''
+rootdir="$(pwd)"
 # Manaully set variables
 host=''
 port='5432'
@@ -10,6 +11,7 @@ pgpass_file=''
 # Method variables
 method=''
 method_file=''
+
 
 get_help() { printf "
 Usage...
@@ -109,11 +111,13 @@ else
 	log "Saving [$host:$port:$db:$user] to [$pgpass_file]"
 
 	echo "$host:$port:$db:$user" > "$pgpass_file"
+	chmod 600 "$pgpass_file"
 fi
 
 
-PGPASSFILE="$pgpass_file"
-log "Using pgpass_file with contents: $(cat $PGPASSFILE)"
+PGPASSFILE="$rootdir/$pgpass_file"
+[[ -f "$PGPASSFILE" ]] || { error "EXconfig" "$PGPASSFILE"; exit 1; }
+log "Using [$PGPASSFILE] with contents [$(cat $PGPASSFILE)]"
 
 
 gen_passwd() { openssl rand -base64 32; }
@@ -177,6 +181,7 @@ case "$method" in
 	# Set user/role names
 	owner_user="${db}_owner"
 	owner_passwd="$(gen_passwd)"
+	webapi_user="${db}_wapi"
 	webapi_passwd="$(gen_passwd)"
 
 	# Initialise database
@@ -203,8 +208,10 @@ case "$method" in
 	psql -f "_meta.sql"
 	popd
 
-	echo "New owner ($owner_user) password: [$owner_passwd]"
-	echo "New webapi password: [$webapi_passwd]"
+	# Output the passwords to the user
+	printf "\nCREDENTIALS"
+	printf "owner:\nusername: $owner_user\npassword: $owner_passwd"
+	printf "wapi:\nusername: $webapi_user\npassword: $webapi_passwd"
 	;;
 
  '')
