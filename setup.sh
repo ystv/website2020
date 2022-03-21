@@ -164,7 +164,9 @@ case "$method" in
 			-U $user \
 			-p $port \
 			-d $db \
-			-Fc \
+			--format=custom \
+			--no-privileges \
+			--no-owner \
 		 > "$method_file" \
 		 || { error "PSQLfail" "pg_dump"; exit 1; }
 		;;
@@ -174,8 +176,10 @@ case "$method" in
 			-U $user \
 			-p $port \
 			-d $db \
-			-Fc \
-			-a \
+			--format=custom \
+			--no-privileges \
+			--no-owner \
+			--data-only \
 		 > "$method_file" \
 		 || { error "PSQLfail" "pg_dump"; exit 1; }
 		;;
