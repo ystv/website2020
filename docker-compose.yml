@@ -1,0 +1,16 @@
+version: "3.7"
+
+services:
+  db:
+    container_name: ystv-website2020-db
+    build: 
+      context: .    
+    ports:
+      - 5432:5432
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: changeme
+
+volumes:
+  db-data:

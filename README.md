@@ -24,23 +24,17 @@ So this has changed a lot since the initial idea, but the general plan is break 
 ### Developing database locally
 You will need a PostgreSQL instance running which you can get running easy with Docker.
 ```
-docker run \
-    -d \
-    --name ystv-website2020-db \
-    -e POSTGRES_PASSWORD=changeme \
-    -p 5432:5432 \
-    -v ystv-website2020-db-data:/var/lib/postgresql/data \
-    postgres
+docker-compose up -d
 ```
-- Switch `changeme` with a password you want
-- This will create a Docker volume called `ystv-website-2020-db-data` to allow data persistence
-- Can be started and stopped with `docker start/stop ystv-website2020-db`
 
-Can access the built-in psql client with
+Started and stopped with `docker-compose up -d / docker-compose down`
+
+Access the built-in psql client with
 ```
 docker exec -it ystv-website2020-db psql -U postgres
 ```
 
+### Installing the `psql` client
 It's recommended to also install `psql` which is not available in Ubuntu 20.40's repos so it will need to be added.
 
 Add PostgreSQL repo signing key
@@ -68,14 +62,17 @@ If you started Postgres in Docker you will be able to connect using:
 psql -h localhost
 ```
 
+### Deleting Docker DB
+Specify the `-v` flag to remove named volumes in addition to deleting the postgres container
+```
+docker-compose down -v
+```
+
+### Getting the source-code
 You will need to clone the repo to your computer in order to initialise the database with the correct information. It is recommended you setup access to GitHub with SSH. (which you can read more about [here](https://docs.github.com/en/authentication/connecting-to-github-with-ssh))
 ```
 git clone git@github.com:ystv/website2020
 ```
-### Deleting Docker DB
-docker stop ystv-website2020-db
-docker rm ystv-website2020-db
-docker volume rm ystv-website2020-db-data
 
 ### Dependencies
 
