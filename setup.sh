@@ -1,6 +1,5 @@
 verbose=''
 force=''
-overwrite=''
 # Manaully set variables
 host=''
 port='5432'
@@ -47,6 +46,7 @@ declare -A messages=( \
 	["2xconfig"]="DB values have been set twice - default to config file" \
 	["EXconfig"]="Config file does not exist" \
 	["TMPconfig"]="Temporary config file already exists" \
+	["ERpasswd"]="Password failed to generate" \
 )
 error() {
 	echo "ERROR: ${messages[$1]} [$2]" >&2 ;}
@@ -116,18 +116,23 @@ PGPASSFILE="$pgpass_file"
 log "Using pgpass_file with contents: $(cat $PGPASSFILE)"
 
 
+gen_passwd() { openssl rand -base64 32; }
+# Test if passwords can be generated
+pass="$(gen_passwd)"
+[[ -n "$pass" ]] || { error "ERpasswd" "$pass"; exit 1; }
+
+
 case "$method" in
  export|export-data)
 	log "Dumping data ($method) to [$method_file]"
 
-	# Test if file already exists (risking writing over a file)
+	# Test if file already exists
 	if [[ -f "$method_file" ]]; then
 		if [[ -n "$force" ]]
-			then warn "RWfile" "$method_file"; overwrite=''
-			else error "RWfile" "$method_file"; exit 1
+			then error "RWfile" "$method_file"; exit 1;
+			else warn "RWfile" "$method_file"
 		fi
 	else
-		overwrite='true'
 		log "Writing to a new file: [$method_file]"
 	fi
 
@@ -138,21 +143,15 @@ case "$method" in
 	
 	# Export the users and roles
 	## We're excluding the password values as then the
-	## running user doesn't need to be "Superser". This
+	## running user doesn't need to be "Superuser". This
 	## does mean the user will need to regen the passwords
 	case "$method" in
 	 export)
-		if [[ -n "$overwrite" ]]
-			then pg_dumpall --roles-only --no-role-passwords > "$method_file"
-			else pg_dumpall --roles-only --no-role-passwords >> "$method_file"
-		fi
+		pg_dumpall --roles-only --no-role-passwords > "$method_file"
 		pg_dump --create >> "$method_file"
 		;;
-	 export-date)
-		if [[ -n "$overwrite" ]]
-			then pg_dump --create > "$method_file"
-			else pg_dump --create >> "$method_file"
-		fi
+	 export-data)
+		pg_dump --create > "$method_file"
 		;;
 	esac ;;
 
@@ -162,11 +161,12 @@ case "$method" in
 	# Test if file exists
 	[[ -f "$method_file" ]] || { error "EXfile" "$method_file"; exit 1; }
 
-	# IMPORT
-	## Open file and import data into the database
+	# Import into database
 	psql -f "$method_file"
 
 	# TODO: Ask user if they want to regenerate db passwords
+	## Then actually use it
+	log "New generated password... $(gen_passwd)"
 	;;
 
  migrate)
@@ -175,19 +175,13 @@ case "$method" in
 	# Test if file exists
 	[[ -f "$method_file" ]] || { error "EXfile" "$method_file"; exit 1; }
 
-	# MIGRATION
-	## Do some migration process on the old data
-
-	# Import migration data
-	## Presuming we're working with a pg_dumpall output
+	# Import migration data (pg_dumpall output)
 	psql -f "$method_file"
 
 	# Set user/role names
 	owner_user="${db}_owner"
-	owner_passwd="pog"
+	owner_passwd="$(gen_passwd)"
 	webapi_passwd="champ"
-	#apps_role="${db}_apps"
-
 
 	# Initialise database
 	pushd db-init
