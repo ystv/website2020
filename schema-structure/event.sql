@@ -79,7 +79,7 @@ CREATE TABLE event.positions (
 );
 COMMENT ON COLUMN event.positions.admin IS
 'Whoever has this permission will have admin privileges over the event';
-COMMENT ON COLUMN event.positions.page_description IS
+COMMENT ON COLUMN event.positions.full_description IS
 'This goes into a lot more detail in comparision to the brief discription
 and would be displayed on it''s own dedicated page';
 COMMENT ON COLUMN event.positions.training_url IS
