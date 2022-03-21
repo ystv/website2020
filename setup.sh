@@ -231,6 +231,33 @@ case "$method" in
 	## Run the database schema setup
 	## Run the database data setup
 	## Run the tests
+
+	# Set user/role names
+	owner_user="${db}_owner"
+	owner_passwd="$(gen_passwd)"
+	webapi_user="${db}_wapi"
+	webapi_passwd="$(gen_passwd)"
+
+	# Initialise database
+	pushd db-init
+	psql -f "_meta.sql" \
+		-v db_name=$db \
+		-v owner_password=$owner_passwd \
+		-v wapi_password=$webapi_passwd \
+	 	|| { error "PSQLfail" "migrate db-init"; exit 1; }
+	popd
+
+	# Create tables
+	pushd schema-structure
+	psql -f "_meta.sql" \
+		-v owner_user=$owner_user \
+		|| { error "PSQLfail" "migrate schema-structure"; exit 1; }
+	popd
+
+	# Output the passwords to the user
+	echo -e "CREDENTIALS"
+	echo -e "owner:\nusername: $owner_user\npassword: $owner_passwd"
+	echo -e "wapi:\nusername: $webapi_user\npassword: $webapi_passwd"
 	;;
 
  *) error "NAmethod" "$method"; exit 1 ;;
