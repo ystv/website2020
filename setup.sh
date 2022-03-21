@@ -188,7 +188,12 @@ case "$method" in
 	[[ -f "$method_file" ]] || { error "EXfile" "$method_file"; exit 1; }
 
 	# Import into database
-	pg_restore "$method_file" || { error "PSQLfail" "import"; exit 1; }
+	pg_restore \
+		-h $host \
+		-U $user \
+		-p $port \
+		-d $db \
+	"$method_file" || { error "PSQLfail" "import"; exit 1; }
 	;;
 
  migrate)
