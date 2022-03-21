@@ -126,6 +126,13 @@ gen_passwd() { openssl rand -base64 32; }
 pass="$(gen_passwd)"
 [[ -n "$pass" ]] || { error "ERpasswd" "$pass"; exit 1; }
 
+trap ctrl_c 1
+
+function ctrl_c() {
+    echo 
+    echo "Ctrl-C by user"
+    exit
+}
 
 case "$method" in
  export|export-data)
@@ -152,15 +159,23 @@ case "$method" in
 	## does mean the user will need to regen the passwords
 	case "$method" in
 	 export)
-		pg_dumpall --roles-only --no-role-passwords \
+		pg_dump \
+			-h $host \
+			-U $user \
+			-p $port \
+			-d $db \
+			-Fc \
 		 > "$method_file" \
-		 || { error "PSQLfail" "pg_dumpall"; exit 1; }
-		pg_dump --create \
-		 >> "$method_file" \
 		 || { error "PSQLfail" "pg_dump"; exit 1; }
 		;;
 	 export-data)
-		pg_dump --create \
+		pg_dump \
+			-h $host \
+			-U $user \
+			-p $port \
+			-d $db \
+			-Fc \
+			-a \
 		 > "$method_file" \
 		 || { error "PSQLfail" "pg_dump"; exit 1; }
 		;;
@@ -173,7 +188,7 @@ case "$method" in
 	[[ -f "$method_file" ]] || { error "EXfile" "$method_file"; exit 1; }
 
 	# Import into database
-	psql -f "$method_file" || { error "PSQLfail" "import"; exit 1; }
+	pg_restore "$method_file" || { error "PSQLfail" "import"; exit 1; }
 	;;
 
  migrate)
@@ -279,6 +294,8 @@ case "$method" in
 	# Initialise database
 	pushd db-init
 	psql -f "_meta.sql" \
+		-h $host \
+		-U $user \
 		-v db_name=$db \
 		-v owner_password=$owner_passwd \
 		-v wapi_password=$webapi_passwd \
@@ -288,6 +305,8 @@ case "$method" in
 	# Create tables
 	pushd schema-structure
 	psql -f "_meta.sql" \
+		-h $host \
+		-U $user \
 		-v owner_user=$owner_user \
 		|| { error "PSQLfail" "migrate schema-structure"; exit 1; }
 	popd
