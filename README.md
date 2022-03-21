@@ -72,6 +72,10 @@ You will need to clone the repo to your computer in order to initialise the data
 ```
 git clone git@github.com:ystv/website2020
 ```
+### Deleting Docker DB
+docker stop ystv-website2020-db
+docker rm ystv-website2020-db
+docker volume rm ystv-website2020-db-data
 
 ### Dependencies
 

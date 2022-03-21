@@ -169,6 +169,66 @@ case "$method" in
 
 	# MIGRATION
 	## Do some migration process on the old data
+
+	# Import migration data
+	## Presuming we're working with a pg_dumpall output
+	PGPASSFILE=$pgpass_file psql \
+	 	-h $host \
+	 	-U $user \
+	 	-p $port \
+	 	-f $method_file
+
+	# Set user/role names
+	owner_user="${db}_owner"
+	apps_role="${db}_apps"
+
+	# Generate user passwords
+	owner_password="pog"
+	wapi_password="champ"
+
+	# Initialise database
+	pushd db-init
+	PGPASSFILE=$pgpass_file psql \
+		-h $host \
+		-U $user \
+		-p $port \
+		-v db_name=$db \
+		-v owner_password=$owner_password \
+		-v wapi_password=$wapi_password \
+		-f _meta.sql
+	popd
+
+	# Create tables
+	pushd schema-structure
+	PGPASSFILE=$pgpass_file \
+	psql \
+		-h $host \
+		-U $user \
+		-p $port \
+		-d $db \
+		-v owner_user=$owner_user \
+		-f _meta.sql
+	popd
+
+	# Migrate from old to new
+	pushd schema-migrate/pre2022
+	PGPASSFILE=$pgpass_file psql \
+		-h $host \
+		-U $user \
+		-p $port \
+		-d $db \
+		-f _meta.sql
+	popd
+
+	# Run post-migration initialisation
+	pushd schema-data
+	PGPASSFILE=$pgpass_file psql \
+		-h $host \
+		-U $user \
+		-p $port \
+		-d $db \
+		-f _meta.sql
+	popd
 	;;
  '')
 	warn "0xmethod" "$method"
