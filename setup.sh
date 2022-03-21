@@ -307,6 +307,7 @@ case "$method" in
 	psql -f "_meta.sql" \
 		-h $host \
 		-U $user \
+		-d $db \
 		-v owner_user=$owner_user \
 		|| { error "PSQLfail" "migrate schema-structure"; exit 1; }
 	popd
