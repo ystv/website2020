@@ -12,12 +12,11 @@ So this has changed a lot since the initial idea, but the general plan is break 
 
 ## Layout
 
-`/planDesign` - Plan the project overview
-`/planMethod` - Plan the specifics of a website component
-`/schemaStructure` - Create the database
-`/schemaData` - Initialise the database (add in data)
-`/schemaMigrate` - Migrate the database from an old schema
-`/utilFiles` - Repeated config files like docker, nginx etc.
+`/plan-design` - Plan the project overview
+`/plan-method` - Plan the specifics of a website component
+`/db-init` - Initialise the database and schemas
+`/schema-structure` - Create the tables
+`/schema-migrate` - Migrate the database from an old schema
 
 ## Initialising
 
