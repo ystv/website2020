@@ -197,6 +197,9 @@ case "$method" in
 		-U $user \
 		-p $port \
 		-d $db \
+		--format=custom \
+		--no-privileges \
+		--no-owner \
 	"$method_file" || { error "PSQLfail" "import"; exit 1; }
 	;;
 
