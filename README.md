@@ -73,6 +73,39 @@ You will need to clone the repo to your computer in order to initialise the data
 git clone git@github.com:ystv/website2020
 ```
 
+## setup.sh
+Enables easy management over the website2020 database with a couple of useful tools.
+
+setup
+````
+./setup.sh -D new-database
+````
+Initialises a blank `website2020` database, required users, and tables. Returns the DB user's passwords on a successful setup.
+
+#### export
+```
+./setup.sh -D target-database export db-backup
+```
+Export the database data and schema, excludes users and roles. Used for when moving between Postgres instances. (compatible with both pre-2020 and website2020 DBs)
+
+#### export-data
+```
+./setup.sh -D target-database export-data db-backup
+```
+Export only the data, this would be used when the `target-database` has already had `setup` ran on it.
+
+#### import
+```
+./setup.sh -D target-database import db-backup
+```
+Import an existing `website2020` db. Compatibile with both `export` and `export-data` outputs.
+
+#### migrate
+```
+./setup.sh -D new-database pre2020-db
+```
+Import and migrate a pre-2020 database to the latest `website2020` schema. Returns the DB user's passwords on a successful migrate.
+
 ### Dependencies
 
 - postgres
