@@ -76,7 +76,7 @@ git clone git@github.com:ystv/website2020
 ## setup.sh
 Enables easy management over the website2020 database with a couple of useful tools.
 
-setup
+#### setup
 ````
 ./setup.sh -D new-database
 ````
