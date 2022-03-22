@@ -100,6 +100,8 @@ Export only the data, this would be used when the `target-database` has already 
 ```
 Import an existing `website2020` db. Compatibile with both `export` and `export-data` outputs.
 
+> Note: Requires an existing database, for `export-data` run `setup` first. For `export` you will need to manually create a database
+
 #### migrate
 ```
 ./setup.sh -D new-database pre2020-db
