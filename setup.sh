@@ -209,18 +209,6 @@ case "$method" in
 	# Test if file exists
 	[[ -f "$method_file" ]] || { error "EXfile" "$method_file"; exit 1; }
 
-	# Import migration data (pg_dumpall output)
-	## Since we haven't created the database yet we're using "postgres" as what
-	## we connect too (in postgres you always need to connect to a specifc db)
-	## 
-	## TODO: Do we want to presume the database has already been made?
-	psql -f "$method_file" \
-		-h $host \
-		-U $user \
-		-p $port \
-		-d postgres \
-	|| { error "PSQLfail" "migrate import"; exit 1; }
-
 	# Set user/role names
 	owner_user="${db}_owner"
 	owner_passwd="$(gen_passwd)"
@@ -250,6 +238,17 @@ case "$method" in
 		-v owner_user=$owner_user \
 		|| { error "PSQLfail" "migrate schema-structure"; exit 1; }
 	popd
+
+	# Import migration data (export output)
+	pg_restore \
+		-h $host \
+		-U $user \
+		-p $port \
+		-d $db \
+		--format=custom \
+		--no-privileges \
+		--no-owner \
+	"$method_file" || { error "PSQLfail" "migrate import"; exit 1; }
 
 	# Migration
 	pushd schema-migrate/pre2020
