@@ -214,6 +214,8 @@ case "$method" in
 	owner_passwd="$(gen_passwd)"
 	webapi_user="${db}_wapi"
 	webapi_passwd="$(gen_passwd)"
+	webauth_user="${db}_wauth"
+	webauth_passwd="$(gen_passwd)"
 
 	# Initialise database
 	pushd db-init
@@ -225,6 +227,7 @@ case "$method" in
 		-v db_name=$db \
 		-v owner_password=$owner_passwd \
 		-v wapi_password=$webapi_passwd \
+		-v wauth_password=$webauth_passwd \
 	 	|| { error "PSQLfail" "migrate db-init"; exit 1; }
 	popd
 
@@ -289,6 +292,7 @@ case "$method" in
 	echo -e "CREDENTIALS"
 	echo -e "owner:\nusername: $owner_user\npassword: $owner_passwd"
 	echo -e "wapi:\nusername: $webapi_user\npassword: $webapi_passwd"
+	echo -e "wauth:\nusername: $webauth_user\npassword: $webauth_passwd"
 	;;
 
  '')

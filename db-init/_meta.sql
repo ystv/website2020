@@ -2,6 +2,7 @@
 -- - db_name
 -- - owner_password
 -- - wapi_password
+-- - wauth_password
 \echo 'ystv_website2020 database/user/schema/privilege creation'
 
 \set owner_user :db_name'_owner'
