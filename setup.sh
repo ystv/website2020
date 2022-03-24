@@ -248,6 +248,8 @@ case "$method" in
 		--format=custom \
 		--no-privileges \
 		--no-owner \
+		--clean \
+		--if-exists \
 	"$method_file" || { error "PSQLfail" "migrate import"; exit 1; }
 
 	# Migration
