@@ -106,8 +106,9 @@ config="$host:$port:$dbname:$dbuser"
 
 
 dbInfo="-h $host -U $user -p $port"
-owner_user="${db}_owner"; owner_password="$(genPassword)"
-webapi_user="${db}_wapi"; webapi_password="$(genPassword)"
+owner_user="${dbname}_owner"; owner_password="$(genPassword)"
+webapi_user="${dbname}_wapi"; webapi_password="$(genPassword)"
+wauth_user="${dbname}_wauth"; wauth_password=$(genPassword)"
 
 
 case "$method" in
@@ -117,6 +118,7 @@ case "$method" in
 	 PGPASSWORD="$dbpass" psql $dbInfo -v db_name=$dbname \
 		-v owner_password=$owner_password \
 		-v wapi_password=$wapi_password \
+		-v wauth_password=$wauth_password \
 		-f "_meta.sql" || error "PSQL" "setup db-init"
 	popd
 
@@ -133,6 +135,9 @@ owner:
 wapi:
  username: $webapi_user
  password: $webapi_password
+wauth:
+ username: $wauth_user
+ password: $wauth_password
 " ;;
 
  export)
@@ -145,11 +150,10 @@ wapi:
 	else log "Writing to a new file: [$method_file]"
 	fi
 
-	PGPASSWORD="$dbpass" pg_dumpall $dbInfo \
-		--roles-only --no-role-passwords \
-		> "$method_file" || error "PSQL" "export dumpall"
 	PGPASSWORD="$dbpass" pg_dump $dbInfo \
-		--create \
+		--format=custom \
+		--no-privileges \
+		--no-owner \
 		>> "$method_file" || error "PSQL" "export dump"
 	;;
 
@@ -157,7 +161,11 @@ wapi:
 	# Import from a file
 	[[ -f "$method_file" ]] || error "NOfile" "$method_file"
 
-	psql -f "$method_file" || error "PSQL" "import"
+	PGPASSWORD="$dbpass" pg_restore $dbInfo -d $dbname \
+		--format=custom \
+		--no-privileges \
+		--no-owner \
+		-f "$method_file" || error "PSQL" "import"
  	;;
 
  backup)
@@ -171,16 +179,16 @@ wapi:
 	fi
 
 	PGPASSWORD="$dbpass" pg_dump $dbInfo \
-		--create \
+		--format=custom \
+		--no-privileges \
+		--no-owner \
+		--data-only \
 		>> "$method_file" || error "PSQL" "export dump"
 	;;
 
  migrate)
 	# Migrate old database schema
 	[[ -f "$method_file" ]] || error "NOfile" "$method_file"
-
-	PGPASSWORD="$dbpass" psql $dbInfo -d postgres \
-		-f "$method_file" || error "PSQL" "migrate"
 
 	pushd db-init
 	 PGPASSWORD="$dbpass" psql $dbInfo -d postgres \
@@ -196,6 +204,14 @@ wapi:
 		-v owner_user=$owner_user \
 		-f "_meta.sql" || error "PSQL" "migrate schema-structure"
 	popd
+
+	PGPASSWORD="$dbpass" pg_restore $dbInfo -d $dbname \
+		--format=custom \
+		--no-privileges \
+		--no-owner \
+		--clean \
+		--if-exists \
+		-f "$method_file" || error "PSQL" "migrate"
 
 	pushd schema-migrate/pre2020
 	 pushd pre-actions
@@ -218,6 +234,9 @@ owner:
 wapi:
  username: $webapi_user
  password: $webapi_password
+wauth:
+ username: $wauth_user
+ password: $wauth_password
 " ;;
 
  *) getHelp
