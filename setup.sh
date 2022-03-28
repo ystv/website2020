@@ -105,7 +105,7 @@ config="$host:$port:$dbname:$dbuser"
 	error "INVconfig" "$config"
 
 
-dbInfo="-h $host -U $user -p $port"
+dbInfo="-h $host -U $dbuser -p $port"
 owner_user="${dbname}_owner"; owner_password="$(genPassword)"
 webapi_user="${dbname}_wapi"; webapi_password="$(genPassword)"
 wauth_user="${dbname}_wauth"; wauth_password=$(genPassword)"
