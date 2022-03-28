@@ -114,7 +114,7 @@ case "$method" in
  setup)
 	# Database setup
 	pushd db-init
-	 PGPASSWORD="$dbpass" psql $dbInfo -v db_name=$db \
+	 PGPASSWORD="$dbpass" psql $dbInfo -v db_name=$dbname \
 		-v owner_password=$owner_password \
 		-v wapi_password=$wapi_password \
 		-f "_meta.sql" || error "PSQL" "setup db-init"
@@ -184,7 +184,7 @@ wapi:
 
 	pushd db-init
 	 PGPASSWORD="$dbpass" psql $dbInfo -d postgres \
-		-v db_name=$db \
+		-v db_name=$dbname \
 		-v owner_user=$owner_user \
 		-v owner_password=$owner_password \
 		-v wapi_password=$webapi_password \
@@ -192,21 +192,21 @@ wapi:
 	popd
 
 	pushd schema-structure
-	 PGPASSWORD="$dbpass" psql $dbInfo -d $db \
+	 PGPASSWORD="$dbpass" psql $dbInfo -d $dbname \
 		-v owner_user=$owner_user \
 		-f "_meta.sql" || error "PSQL" "migrate schema-structure"
 	popd
 
 	pushd schema-migrate/pre2020
 	 pushd pre-actions
-	 PGPASSWORD="$dbpass" psql $dbInfo -d $db \
+	 PGPASSWORD="$dbpass" psql $dbInfo -d $dbname \
 		-f "_meta.sql" || error "PSQL" "migrate pre-actions"
 	 popd
-	 PGPASSWORD="$dbpass" psql $dbInfo -d $db \
+	 PGPASSWORD="$dbpass" psql $dbInfo -d $dbname \
 		-f "_meta.sql" || error "PSQL" "migrate old-->new"
 	 popd
 	 pushd post-actions
-	 PGPASSWORD="$dbpass" psql $dbInfo -d $db \
+	 PGPASSWORD="$dbpass" psql $dbInfo -d $dbname \
 		-f "_meta.sql" || error "PSQL" "migrate post-actions"
 	 popd
 	popd
