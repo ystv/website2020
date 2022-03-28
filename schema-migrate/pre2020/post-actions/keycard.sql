@@ -42,10 +42,7 @@ INSERT INTO people.role_members (
     user_id,
     role_id
 )
-SELECT (
-    id,
-    keycard_role_id
-)
+SELECT id, keycard_role_id
 FROM public.members
 WHERE on_key_list;
 

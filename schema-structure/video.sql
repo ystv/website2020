@@ -1,5 +1,5 @@
 -- Creating video schema, all video related tables stored here
-CREATE SCHEMA video;
+CREATE SCHEMA IF NOT EXISTS video;
 -- We will initate the tables in the following order,
 -- in order to ensure that the foreign keys get setup:
 -- 1. video.series

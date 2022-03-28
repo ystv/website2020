@@ -1,6 +1,6 @@
 -- Creating our people schema which will store personal data and whatnot
 -- so we'll be trying to keep things in there and clamp down on access.
-CREATE SCHEMA people;
+CREATE SCHEMA IF NOT EXISTS people;
 -- We will create the tables in the following order
 -- 1. people.users REFERENCES people.users
 -- 2. people.roles

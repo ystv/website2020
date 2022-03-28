@@ -1,4 +1,4 @@
-CREATE SCHEMA misc;
+CREATE SCHEMA IF NOT EXISTS misc;
 --
 -- Table creations
 --

@@ -1,5 +1,5 @@
 -- Creating event schema, all event calendar related tables are stored here
-CREATE SCHEMA event;
+CREATE SCHEMA IF NOT EXISTS event;
 -- We will initiate the tables in the following order:
 -- 1. event.events REFERENCES people.users
 -- 2. event.signup_sheets REFERENCES event.events
@@ -79,7 +79,7 @@ CREATE TABLE event.positions (
 );
 COMMENT ON COLUMN event.positions.admin IS
 'Whoever has this permission will have admin privileges over the event';
-COMMENT ON COLUMN event.positions.page_description IS
+COMMENT ON COLUMN event.positions.full_description IS
 'This goes into a lot more detail in comparision to the brief discription
 and would be displayed on it''s own dedicated page';
 COMMENT ON COLUMN event.positions.training_url IS
