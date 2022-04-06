@@ -13,8 +13,8 @@ SELECT id,
     posted_by
 FROM public.quotes;
 --
--- Migrate public.term_dates to misc.terms
-INSERT INTO misc.terms (
+-- Migrate public.term_dates to misc.teaching_periods
+INSERT INTO misc.teaching_periods (
     year,
     term,
     start,
