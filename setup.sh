@@ -55,7 +55,7 @@ testVar() {
 	# Test if a variable has already been set
 	[[ -n $1 ]] && error "2Xvar" "$1"
 }
-genPassword() { openssl rand -base64 32; }
+genPassword() { echo "$(pwmake 128)$(pwmake 128)"; }
 
 
 while [[ $# -gt 0 ]]; do
@@ -107,18 +107,29 @@ config="$host:$port:$dbname:$dbuser"
 
 dbInfo="-h $host -U $dbuser -p $port"
 owner_user="${dbname}_owner"; owner_password="$(genPassword)"
-webapi_user="${dbname}_wapi"; webapi_password="$(genPassword)"
+wapi_user="${dbname}_wapi"; wapi_password="$(genPassword)"
 wauth_user="${dbname}_wauth"; wauth_password="$(genPassword)"
 
+credentials="CREDENTIALS
+owner:
+ username: $owner_user
+ password: $owner_password
+wapi:
+ username: $wapi_user
+ password: $wapi_password
+wauth:
+ username: $wauth_user
+ password: $wauth_password
+"
 
 case "$method" in
  setup)
 	# Database setup
 	pushd db-init
 	 PGPASSWORD="$dbpass" psql $dbInfo -v db_name=$dbname \
-		-v owner_password=$owner_password \
-		-v wapi_password=$wapi_password \
-		-v wauth_password=$wauth_password \
+		-v owner_password="$owner_password" \
+		-v wapi_password="$wapi_password" \
+		-v wauth_password="$wauth_password" \
 		-f "_meta.sql" || error "PSQL" "setup db-init"
 	popd
 
@@ -128,17 +139,8 @@ case "$method" in
 		-f "_meta.sql" || error "PSQL" "setup schema-structure"
 	popd
 
-	printf "CREDENTIALS
-owner:
- username: $owner_user
- password: $owner_password
-wapi:
- username: $webapi_user
- password: $webapi_password
-wauth:
- username: $wauth_user
- password: $wauth_password
-" ;;
+	echo "$credentials"
+;;
 
  export)
 	# Export everything
@@ -195,7 +197,7 @@ wauth:
 		-v db_name=$dbname \
 		-v owner_user=$owner_user \
 		-v owner_password=$owner_password \
-		-v wapi_password=$webapi_password \
+		-v wapi_password=$wapi_password \
 		-f "_meta.sql" || error "PSQL" "migrate db-init"
 	popd
 
@@ -227,17 +229,8 @@ wauth:
 	 popd
 	popd
 
-	printf "CREDENTIALS
-owner:
- username: $owner_user
- password: $owner_password
-wapi:
- username: $webapi_user
- password: $webapi_password
-wauth:
- username: $wauth_user
- password: $wauth_password
-" ;;
+	echo "$credentials"
+;;
 
  *) getHelp
 esac
