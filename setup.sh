@@ -126,7 +126,8 @@ case "$method" in
  setup)
 	# Database setup
 	pushd db-init
-	 PGPASSWORD="$dbpass" psql $dbInfo -v db_name=$dbname \
+	 PGPASSWORD="$dbpass" psql $dbInfo -d postgres
+		-v db_name=$dbname \
 		-v owner_password="$owner_password" \
 		-v wapi_password="$wapi_password" \
 		-v wauth_password="$wauth_password" \
@@ -134,7 +135,7 @@ case "$method" in
 	popd
 
 	pushd schema-structure
-	 PGPASSWORD="$dbpass" psql $dbInfo \
+	 PGPASSWORD="$dbpass" psql $dbInfo -d $dbname \
 		-v owner_user=$owner_user \
 		-f "_meta.sql" || error "PSQL" "setup schema-structure"
 	popd
@@ -152,7 +153,7 @@ case "$method" in
 	else log "Writing to a new file: [$method_file]"
 	fi
 
-	PGPASSWORD="$dbpass" pg_dump $dbInfo \
+	PGPASSWORD="$dbpass" pg_dump $dbInfo -d $dbname \
 		--format=custom \
 		--no-privileges \
 		--no-owner \
