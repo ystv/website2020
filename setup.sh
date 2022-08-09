@@ -34,7 +34,7 @@ getHelp() { printf "Usage...
  export [..]		Export database to a file
  import [..]		Import from a file
  backup [..]		Export data to a file
- migrate [..]		Migrate old database form a file
+ migrate [..]		Migrate old database from a file
 
  -H --host		Set the database host
  -p --port		Set the database port
