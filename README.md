@@ -4,7 +4,9 @@ This repo contains the schemas for the website2020 project.
 
 ## Plan
 
-So this has changed a lot since the initial idea, but the general plan is break up the old CSF php site into a modular, easily deployable system written in more modern languages and frameworks.
+So this has changed a lot since the initial idea, but the general plan is break
+up the old CSF php site into a modular, easily deployable system written in
+more modern languages and frameworks.
 
 - Next.js for the public-facing website
 - React for a video management and new internal site
@@ -21,92 +23,118 @@ So this has changed a lot since the initial idea, but the general plan is break 
 ## Initialising
 
 ### Developing database locally
-You will need a PostgreSQL instance running which you can get running easy with Docker.
-```
+
+Setup a PostgreSQL instance running which you can get running easy with Docker.
+
+```sh
 docker-compose up -d
 ```
 
 Started and stopped with `docker-compose up -d / docker-compose down`
 
 Access the built-in psql client with
-```
+
+```sh
 docker exec -it ystv-website2020-db psql -U postgres
 ```
 
 ### Installing the `psql` client
-It's recommended to also install `psql` which is not available in Ubuntu 20.40's repos so it will need to be added.
+
+It's recommended to also install `psql` which is not available in Ubuntu's apt
+repos so it will need to be added.
 
 Add PostgreSQL repo signing key
-```
+
+```sh
 wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
 ```
 
 Add PostgreSQL repo
-```
+
+```sh
 echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/postgresql-pgdg.list > /dev/null
 ```
 
 Update apt metdata
-```
+
+```sh
 sudo apt update
 ```
 
 Install `psql` client
-```
+
+```sh
 sudo apt install postgresql-client-common postgresql-client-14
 ```
 
-If you started Postgres in Docker you will be able to connect using:
-```
+If Postgres is running in Docker, connect using:
+
+```sh
 psql -h localhost
 ```
 
 ### Deleting Docker DB
-Specify the `-v` flag to remove named volumes in addition to deleting the postgres container
-```
+
+Specify the `-v` flag to remove named volumes in addition to deleting the
+postgres container.
+
+```sh
 docker-compose down -v
 ```
 
-### Getting the source-code
-You will need to clone the repo to your computer in order to initialise the database with the correct information. It is recommended you setup access to GitHub with SSH. (which you can read more about [here](https://docs.github.com/en/authentication/connecting-to-github-with-ssh))
-```
-git clone git@github.com:ystv/website2020
-```
-
 ## setup.sh
-Enables easy management over the website2020 database with a couple of useful tools.
+
+Enables easy management over the website2020 database with a couple of useful
+tools. Dependent on `psql`.
 
 #### setup
-````
+
+```sh
 ./setup.sh -D new-database
-````
-Initialises a blank `website2020` database, required users, and tables. Returns the DB user's passwords on a successful setup.
+```
+
+Initialises a blank `website2020` database, required users, and tables. Returns
+the DB user's passwords on a successful setup.
 
 #### export
-```
+
+```sh
 ./setup.sh -D target-database export db-backup
 ```
-Export the database data and schema, excludes users and roles. Used for when moving between Postgres instances. (compatible with both pre-2020 and website2020 DBs)
+
+Export the database data and schema, excludes users and roles. Used for when
+moving between Postgres instances. (compatible with both pre-2020 and
+website2020 DBs)
 
 #### export-data
-```
+
+```sh
 ./setup.sh -D target-database export-data db-backup
 ```
-Export only the data, this would be used when the `target-database` has already had `setup` ran on it.
+
+Export only the data, this would be used when the `target-database` has already
+had `setup` ran on it.
 
 #### import
-```
+
+```sh
 ./setup.sh -D target-database import db-backup
 ```
-Import an existing `website2020` db. Compatibile with both `export` and `export-data` outputs.
 
-> Note: Requires an existing database, for `export-data` run `setup` first. For `export` you will need to manually create a database
+Import an existing `website2020` db. Compatibile with both `export` and
+`backup` outputs.
+
+> Note: Requires an existing database, for `backup` run `setup` first. For
+> `export` create a database manually.
 
 #### migrate
+
+```sh
+./setup.sh -d new-database pre2020-db
 ```
-./setup.sh -D new-database pre2020-db
-```
-Import and migrate a pre-2020 database to the latest `website2020` schema. Returns the DB user's passwords on a successful migrate.
+
+Import and migrate a pre-2020 database to the latest `website2020` schema.
+Returns the DB user's passwords on a successful migrate.
 
 ### Dependencies
 
@@ -114,11 +142,12 @@ Import and migrate a pre-2020 database to the latest `website2020` schema. Retur
 - S3 or equivalent (i.e. minio)
 - docker (optional)
 
-You'll want to setup the databases first, currently developed using postgres.
-
-You'll want to then add the schemas to the database. You can either copy and paste the SQL or use `psql -h {host} -d {database} -f {schema_file}`. If you want to setup all tables automatically, `cd` into the `schemas` folder then execute `psql -h {host} -d {database} -f _meta.sql`. Alternatively, if you want to do it manually, you will want to create it in the following order:
+Create the databases first.
 
 Add extensions: `uuid-ossp` and `tsm_system_rows`.
+
+Add the schemas to the database (`psql -h {host} -d {database} -f
+{schema_file}`). Create it in the following order:
 
 1. people.sql
 2. video.sql
@@ -128,9 +157,9 @@ Add extensions: `uuid-ossp` and `tsm_system_rows`.
 6. creator.sql
 7. playout.sql
 
-Then you will want to add load in the inital data from the SQL found in `/setup`.
+Add in the inital data from the SQL found in `/setup`.
 
-After the data is loaded you will want to setup each software stack in the following order:
+After the data is loaded setup each software stack in the following order:
 
 1. web-auth
 2. web-api
@@ -138,4 +167,4 @@ After the data is loaded you will want to setup each software stack in the follo
 4. creator-studio
 5. public-site
 
-Once all configured following their own setup guides you should be setup!
+Once all configured following their own setup guides, setup should be complete!
