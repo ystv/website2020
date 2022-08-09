@@ -12,6 +12,7 @@
 CREATE USER :owner_user;
 CREATE ROLE :apps_role;
 CREATE USER :wapi_user;
+CREATE USER :wauth_user;
 
 \echo 'setting database users passwords'
 ALTER USER :owner_user WITH LOGIN PASSWORD :'owner_password';
