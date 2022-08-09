@@ -14,11 +14,11 @@ more modern languages and frameworks.
 
 ## Layout
 
-`/plan-design` - Plan the project overview
-`/plan-method` - Plan the specifics of a website component
-`/db-init` - Initialise the database and schemas
-`/schema-structure` - Create the tables
-`/schema-migrate` - Migrate the database from an old schema
+- `/plan-design` - Plan the project overview
+- `/plan-method` - Plan the specifics of a website component
+- `/db-init` - Initialise the database and schemas
+- `/schema-structure` - Create the tables
+- `/schema-migrate` - Migrate the database from an old schema
 
 ## Initialising
 
@@ -85,52 +85,55 @@ docker-compose down -v
 ## setup.sh
 
 Enables easy management over the website2020 database with a couple of useful
-tools. Dependent on `psql`.
+tools. Dependent on `psql`. See `--help` for usage.
 
 #### setup
 
 ```sh
-./setup.sh -D new-database
+./setup.sh setup -d ${new_database_name}
 ```
 
-Initialises a blank `website2020` database, required users, and tables. Returns
+Initialise a blank `website2020` database, required users, and tables. Returns
 the DB user's passwords on a successful setup.
+
+> Requires the connecting user can access the `postgres` database and has
+> grants to `CREATE database` and `CREATE` / `ALTER ROLE`.
 
 #### export
 
 ```sh
-./setup.sh -D target-database export db-backup
+./setup.sh export db-backup -d ${target_database}
 ```
 
-Export the database data and schema, excludes users and roles. Used for when
-moving between Postgres instances. (compatible with both pre-2020 and
+Export the database __data and schema__, excludes users and roles. Used for
+when moving between Postgres instances. (compatible with both pre-2020 and
 website2020 DBs)
 
-#### export-data
+#### backup
 
 ```sh
-./setup.sh -D target-database export-data db-backup
+./setup.sh backup ${database_backup_file} -d ${target_database}
 ```
 
-Export only the data, this would be used when the `target-database` has already
-had `setup` ran on it.
+Export the database __data__, this would be used when the `target-database` has
+already had `setup` ran on it.
 
 #### import
 
 ```sh
-./setup.sh -D target-database import db-backup
+./setup.sh import ${database_backup_file} -d ${target_database}
 ```
 
 Import an existing `website2020` db. Compatibile with both `export` and
 `backup` outputs.
 
-> Note: Requires an existing database, for `backup` run `setup` first. For
-> `export` create a database manually.
+> Requires an existing database, for `backup` run `setup` first. For `export`
+> create a database manually.
 
 #### migrate
 
 ```sh
-./setup.sh -d new-database pre2020-db
+./setup.sh ${pre_2020_database_backup_file} -d ${target_database}
 ```
 
 Import and migrate a pre-2020 database to the latest `website2020` schema.
