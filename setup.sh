@@ -108,7 +108,7 @@ config="$host:$port:$dbname:$dbuser"
 dbInfo="-h $host -U $dbuser -p $port"
 owner_user="${dbname}_owner"; owner_password="$(genPassword)"
 webapi_user="${dbname}_wapi"; webapi_password="$(genPassword)"
-wauth_user="${dbname}_wauth"; wauth_password=$(genPassword)"
+wauth_user="${dbname}_wauth"; wauth_password="$(genPassword)"
 
 
 case "$method" in
