@@ -126,7 +126,7 @@ case "$method" in
  setup)
 	# Database setup
 	pushd db-init
-	 PGPASSWORD="$dbpass" psql $dbInfo -d postgres
+	 PGPASSWORD="$dbpass" psql $dbInfo -d postgres \
 		-v db_name=$dbname \
 		-v owner_password="$owner_password" \
 		-v wapi_password="$wapi_password" \
