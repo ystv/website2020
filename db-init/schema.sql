@@ -14,6 +14,16 @@ CREATE SCHEMA mail;
 CREATE SCHEMA creator;
 CREATE SCHEMA playout;
 
+\echo 'grant schema usage'
+GRANT USAGE ON SCHEMA people TO :apps_role;
+GRANT USAGE ON SCHEMA video TO :apps_role;
+GRANT USAGE ON SCHEMA event TO :apps_role;
+GRANT USAGE ON SCHEMA misc TO :apps_role;
+GRANT USAGE ON SCHEMA mail TO :apps_role;
+GRANT USAGE ON SCHEMA creator TO :apps_role;
+GRANT USAGE ON SCHEMA playout TO :apps_role;
+
+-- TODO: Move elsewhere since these grants are only applied to existing tables.
 \echo 'granting schema privleges'
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA people TO :apps_role;
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA video TO :apps_role;
