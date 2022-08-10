@@ -137,7 +137,12 @@ Import an existing `website2020` db. Compatibile with both `export` and
 ```
 
 Import and migrate a pre-2020 database to the latest `website2020` schema.
-Returns the DB user's passwords on a successful migrate.
+
+> Requires an existing database, run `setup` first.
+
+> Removes all existing website2020 data.
+
+> If a pre-2020 database has already been imported. It will overwrite.
 
 ### Dependencies
 

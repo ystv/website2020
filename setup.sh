@@ -193,21 +193,7 @@ case "$method" in
 	# Migrate old database schema
 	[[ -f "$method_file" ]] || error "NOfile" "$method_file"
 
-	pushd db-init
-	 PGPASSWORD="$dbpass" psql $dbInfo -d postgres \
-		-v db_name=$dbname \
-		-v owner_user=$owner_user \
-		-v owner_password=$owner_password \
-		-v wapi_password=$wapi_password \
-		-f "_meta.sql" || error "PSQL" "migrate db-init"
-	popd
-
-	pushd schema-structure
-	 PGPASSWORD="$dbpass" psql $dbInfo -d $dbname \
-		-v owner_user=$owner_user \
-		-f "_meta.sql" || error "PSQL" "migrate schema-structure"
-	popd
-
+	# Replace existing pre-2020 data if it exists.
 	PGPASSWORD="$dbpass" pg_restore $dbInfo -d $dbname \
 		--format=custom \
 		--no-privileges \
@@ -216,6 +202,13 @@ case "$method" in
 		--if-exists \
 		-f "$method_file" || error "PSQL" "migrate"
 
+	# Truncate all website2020 tables.
+	pushd management-scripts
+	PGPASSWORD="$dbpass" psql $dbInfo -d $dbname \
+	-f "clean.sql" || error "PSQL" "clean"
+	popd
+
+	# Run migration scripts.
 	pushd schema-migrate/pre2020
 	 pushd pre-actions
 	 PGPASSWORD="$dbpass" psql $dbInfo -d $dbname \
@@ -229,8 +222,6 @@ case "$method" in
 		-f "_meta.sql" || error "PSQL" "migrate post-actions"
 	 popd
 	popd
-
-	echo "$credentials"
 ;;
 
  *) getHelp
