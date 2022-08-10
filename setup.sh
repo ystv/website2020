@@ -168,7 +168,7 @@ case "$method" in
 		--format=custom \
 		--no-privileges \
 		--no-owner \
-		-f "$method_file" || error "PSQL" "import"
+		"$method_file" || error "PSQL" "import"
  	;;
 
  backup)
@@ -200,7 +200,7 @@ case "$method" in
 		--no-owner \
 		--clean \
 		--if-exists \
-		-f "$method_file" || error "PSQL" "migrate"
+		"$method_file" || error "PSQL" "migrate"
 
 	# Truncate all website2020 tables.
 	pushd management-scripts
