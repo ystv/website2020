@@ -6,7 +6,7 @@ host=''
 port='5432'
 dbname=''
 dbuser=''
-dbpass=''
+dbpass="$PGPASSWORD"
 askpass=''
 # Method variables
 method=''
