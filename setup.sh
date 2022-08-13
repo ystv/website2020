@@ -216,7 +216,6 @@ case "$method" in
 	 popd
 	 PGPASSWORD="$dbpass" psql $dbInfo -d $dbname \
 		-f "_meta.sql" || error "PSQL" "migrate old-->new"
-	 popd
 	 pushd post-actions
 	 PGPASSWORD="$dbpass" psql $dbInfo -d $dbname \
 		-f "_meta.sql" || error "PSQL" "migrate post-actions"
