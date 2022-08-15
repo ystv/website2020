@@ -146,7 +146,7 @@ case "$method" in
  export)
 	# Export everything
 	if [[ -f "$method_file" ]]; then
-		if [[ -n "$force" ]]
+		if [[ -z "$force" ]]
 			then error "RWfile" "$method_file"
 			else warn "RWfile" "$method_file"
 		fi
@@ -157,7 +157,7 @@ case "$method" in
 		--format=custom \
 		--no-privileges \
 		--no-owner \
-		>> "$method_file" || error "PSQL" "export dump"
+		> "$method_file" || error "PSQL" "export dump"
 	;;
 
  import)
@@ -174,7 +174,7 @@ case "$method" in
  backup)
 	# Export data
 	if [[ -f "$method_file" ]]; then
-		if [[ -n "$force" ]]
+		if [[ -z "$force" ]]
 			then error "RWfile" "$method_file"
 			else warn "RWfile" "$method_file"
 		fi
@@ -186,7 +186,7 @@ case "$method" in
 		--no-privileges \
 		--no-owner \
 		--data-only \
-		>> "$method_file" || error "PSQL" "export dump"
+		> "$method_file" || error "PSQL" "export dump"
 	;;
 
  migrate)
