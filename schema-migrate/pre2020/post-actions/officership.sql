@@ -13,13 +13,6 @@ UPDATE people.officership_teams SET
 WHERE name = 'admin';
 
 UPDATE people.officership_teams SET
-    name = 'Commercial Team',
-    email_alias = 'commercial',
-    short_description = 'non-existant lol',
-    full_description = ''
-WHERE name = 'commercial';
-
-UPDATE people.officership_teams SET
     name = 'Technical Team',
     email_alias = 'technical',
     short_description = 'Technical operations and maintainence of YSTV equipment',
