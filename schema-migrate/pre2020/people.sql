@@ -97,9 +97,7 @@ INNER JOIN people.officerships ON officership_name = name;
 --
 -- Migration from public.officerships to people.officership_teams
 INSERT INTO people.officership_teams(name)
-SELECT DISTINCT team FROM public.officerships WHERE team IS NOT NULL
--- Marks - temporary hack to avoid "non existent lol"
-AND team <> 'commercial';
+SELECT DISTINCT team FROM public.officerships WHERE team IS NOT NULL AND is_current;
 --
 -- Migration from public.officerships to people.officership_team_members
 INSERT INTO people.officership_team_members(team_id, officer_id, is_leader, is_deputy)
