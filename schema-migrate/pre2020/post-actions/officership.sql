@@ -31,4 +31,4 @@ UPDATE people.officership_teams SET
     email_alias = 'marketing',
     short_description = 'Promoting YSTV to campus and the outside world',
     full_description = 'The Marketing Team controls the 'face of YSTV'. We're an open, friendly team and are always looking for new faces and talents. If you're interested in marketing, branding, graphic design, photography, organising sponsorship or masterminding an advertising campaign, then don't hesitate to get in touch!'
-WHERE name = 'production';
+WHERE name = 'marketing';
