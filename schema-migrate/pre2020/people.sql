@@ -97,7 +97,7 @@ INNER JOIN people.officerships ON officership_name = name;
 --
 -- Migration from public.officerships to people.officership_teams
 INSERT INTO people.officership_teams(name)
--- TODO: the 2020 schema doesn't have an is_current flag for, so we exclude historic teams for now
+-- TODO: the 2020 schema doesn't have an is_current flag for teams, so we exclude historic teams for now
 SELECT DISTINCT team FROM public.officerships WHERE team IS NOT NULL AND is_current;
 --
 -- Migration from public.officerships to people.officership_team_members
