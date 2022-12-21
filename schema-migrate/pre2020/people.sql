@@ -106,5 +106,4 @@ INSERT INTO people.officership_team_members(team_id, officer_id, is_leader, is_d
 SELECT team_id, officer_id, is_team_leader, is_team_deputy
 FROM public.officerships old_off
 INNER JOIN people.officerships new_off ON old_off.name = new_off.name
-INNER JOIN people.officership_teams team ON old_off.team = team.name
-WHERE team.name <> 'commercial'; 
+INNER JOIN people.officership_teams team ON old_off.team = team.name; 
