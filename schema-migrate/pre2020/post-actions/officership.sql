@@ -25,3 +25,10 @@ UPDATE people.officership_teams SET
     short_description = 'Making live and pre-recorded content',
     full_description = 'Responsible for "creating and organsing shows". Involving a load of things to do and skills to learn. '
 WHERE name = 'production';
+
+UPDATE people.officership_teams SET
+    name = 'Marketing Team',
+    email_alias = 'marketing',
+    short_description = 'Promoting YSTV to campus and the outside world',
+    full_description = 'The Marketing Team controls the ''face of YSTV''. We''re an open, friendly team and are always looking for new faces and talents. If you''re interested in marketing, branding, graphic design, photography, organising sponsorship or masterminding an advertising campaign, then don''t hesitate to get in touch!'
+WHERE name = 'marketing';
